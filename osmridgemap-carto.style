@@ -1,0 +1,21 @@
+# This is the osm2pgsql .style file for openstreetmap-carto.
+# It is inteded to be used with openstreetmap-carto.lua and osm2pgsql Lua
+# transforms. Full usage details are in INSTALL.md
+# Among things, this means that the linear vs polygon distinction in this file
+# doesn't matter, because that is set in the Lua and this file is only used for
+# column names and types.
+
+# OsmType  Tag          DataType     Flags
+
+node,way   amenity      text         polygon
+way        bridge       text         linear
+node,way   landuse      text         polygon
+node,way   name         text         linear
+node,way   natural      text         polygon
+node,way   ref          text         linear
+way        ridge        text         linear
+node,way   water        text         polygon
+node,way   waterway     text         polygon
+way        way_area     real         linear # This is calculated during import
+node       rtsa_scale   text
+node       ele			int4
