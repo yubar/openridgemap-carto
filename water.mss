@@ -400,3 +400,53 @@
   }
   
 }
+
+#whitewater-rapids {
+  [zoom >= 12] {
+    marker-file: url('symbols/rapid.svg');
+    marker-placement: interior;
+    marker-clip: false;
+    marker-line-color: @water-border-color;
+    marker-line-width: 0.5;
+    marker-transform: scale(2), rotate([angle]);
+    marker-allow-overlap: true;
+    
+
+    text-name: "[name]";
+    text-size: 10;
+    text-face-name: @oblique-fonts;
+    text-fill: @water-text;
+    text-halo-radius: @water-halo-radius;
+    text-halo-fill: @water-halo-fill;
+
+    text-placement: interior;
+    text-character-spacing: -0.7;
+    /*text-placement-type: simple;
+    text-placements: "S,SW,SE,N,NE,NW,W,E";
+    
+    [angle >= -22.5][angle < 22.5],[angle < -157.5],[angle >= 157.5] {text-placements: "W,E,SW,SE,NW,NE,S,N,10,9,8";}
+    [angle >= 22.5][angle < 67.5],[angle >= -157.5][angle < -112.5] {text-placements: "SE,S,NW,N,W,E,SW,NE,10,9,8";}
+    [angle >= 67.5][angle < 112.5],[angle >= -112.5][angle < -67.5] {text-placements: "S,N,SW,SE,NW,NE,W,E,10,9,8";}
+    [angle >= 112.5][angle < 157.5],[angle >= -67.5][angle < -22.5] {text-placements: "SW,NE,S,N,W,E,SE,NW,10,9,8";}
+*/
+    text-dx: 10;
+    text-dy: 10;
+
+    [zoom >= 13] {
+      marker-transform: scale(2.5), rotate([angle]);
+      text-dx: 12;
+      text-dy: 12;
+    }
+    [zoom >= 14] {
+      marker-transform: scale(3), rotate([angle]);
+      text-dx: 14;
+      text-dy: 14;
+    }
+    [zoom >= 15] {
+      marker-transform: scale(3.5), rotate([angle]);
+      text-dx: 16;
+      text-dy: 16;
+    }
+    
+  }
+}

@@ -264,6 +264,42 @@ Layer:
     properties:
       minzoom: 10
 
+  - id: whitewater-rapids
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (
+          WITH 
+            eps AS (SELECT 0.001 eps)
+          SELECT
+            way
+            ,CONCAT(
+              CASE WHEN tags->'whitewater:rapid_name' IS NOT NULL THEN 'Пор. ' ELSE NULL END
+              ,tags->'whitewater:rapid_name'
+              ,CASE WHEN tags->'whitewater:rapid_name' IS NOT NULL AND tags->'whitewater:rapid_grade' IS NOT NULL THEN ' ' ELSE NULL END
+              ,CASE WHEN tags->'whitewater:rapid_grade' IS NOT NULL THEN CONCAT(tags->'whitewater:rapid_grade', ' к.с.') ELSE NULL END
+            ) AS name
+            , (
+              SELECT 
+                degrees(ST_Azimuth(
+                  ST_StartPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)), 
+                  ST_EndPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)))
+                )-180
+              FROM planet_osm_line L, eps
+              WHERE 
+                L.waterway IS NOT NULL 
+                AND ST_DWithin(P.way, L.way, 0)
+              LIMIT 1
+            ) angle
+          FROM planet_osm_point P
+          WHERE 
+              tags->'whitewater:rapid' IS NOT NULL
+            OR tags->'whitewater:rapid_name' IS NOT NULL 
+            OR tags->'whitewater:rapid_grade' IS NOT NULL 
+        ) AS rapids
+
   - id: text-poly
     class: text
     geometry: polygon

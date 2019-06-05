@@ -71,3 +71,11 @@
     marker-clip: false;
   }
 }
+
+#whitewater-rapids {
+  [feature = 'rapid'][zoom >= 10] {
+    marker-file: url('symbols/spring.svg');
+    marker-placement: interior;
+    marker-clip: false;
+  }
+}
