@@ -155,7 +155,23 @@ Layer:
             )
         ) AS ridges
   
-  - id: roads
+  - id: roads-casing
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          way
+          ,'highway_' || highway AS feature
+          ,tracktype
+        FROM planet_osm_line
+        WHERE highway IS NOT NULL
+        ) AS roads
+    properties:
+      minzoom: 12
+
+  - id: roads-fill
     geometry: linestring
     <<: *extents
     Datasource:
