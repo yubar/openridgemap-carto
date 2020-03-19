@@ -182,3 +182,15 @@
     text-placement: interior;
   }
 }
+
+#amenity-points {
+  [feature = 'tourism_camp_site'][zoom >= 12]
+  {
+    marker-file: url('symbols/campsite.svg');
+    marker-fill: #008000;
+    marker-line-color: #000;
+    marker-line-opacity: 1;
+    marker-line-width: 0.5;
+  }
+}
+

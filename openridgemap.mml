@@ -229,7 +229,8 @@ Layer:
               name,
               COALESCE(
                 'natural_' || CASE WHEN "natural" IN ('peak', 'volcano', 'spring', 'cave_entrance') THEN "natural" ELSE NULL END,
-                'waterway_' || CASE WHEN "waterway" IN ('waterfall') THEN waterway ELSE NULL END
+                'waterway_' || CASE WHEN "waterway" IN ('waterfall') THEN waterway ELSE NULL END,
+                'tourism_' || CASE WHEN "tourism" IN ('camp_site') THEN tourism ELSE NULL END
               ) AS feature,
               
               CASE
@@ -249,6 +250,7 @@ Layer:
             WHERE 
               "natural" IN ('peak', 'volcano')
               OR waterway IN ('waterfall')
+              OR tourism IN ('camp_site')
         ) t
         ORDER BY height DESC NULLS LAST
           ) AS amenity_points
