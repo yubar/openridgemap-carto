@@ -190,7 +190,7 @@
       marker-file: url('symbols/campsite_z13.png');
     }
     [zoom > 13] {
-      marker-file: url('symbols/campsite3_.svg');
+      marker-file: url('symbols/campsite.svg');
       marker-fill: #006600;
       marker-line-color: #fff;
       marker-line-opacity: 0.7;
