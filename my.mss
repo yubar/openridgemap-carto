@@ -191,6 +191,8 @@
     marker-line-color: #000;
     marker-line-opacity: 1;
     marker-line-width: 0.5;
+    [zoom = 12]{marker-transform: scale(0.9);}
+    [zoom >= 14]{marker-transform: scale(1.2);}
   }
 }
 

@@ -13,10 +13,6 @@
      id="canvas"
      style="fill:none;stroke:none;visibility:hidden" />
   <path
-     d="M1 10 L6 1 L11 10 L9 10 L6 4 L3 10 Z"
+     d="M1 10 L6 1 L11 10 L9 10 L6 4 L3 10 Z M0 10 L 12 10 L12 11 L0 11 Z"
      />
-  <path
-     d="M0 10 L 12 10 L12 11 L0 11 Z"
-     />
-   <!--line x1="1" y1="8" x2="9" y2="8" stroke ="1"/-->
 </svg>
