@@ -186,14 +186,16 @@
 #amenity-points {
   [feature = 'tourism_camp_site'][zoom >= 12]
   {
-    marker-file: url('symbols/campsite3_.svg');
-    marker-fill: #006600;
-    marker-line-color: #fff;
-    [zoom <= 13]{marker-line-color: #000;}
-    marker-line-opacity: 0.9;
-    marker-line-width: 0.5;
-    [zoom = 12]{marker-transform: scale(0.5);}
-    [zoom = 13]{marker-transform: scale(0.7);}
+    [zoom <= 13] {
+      marker-file: url('symbols/campsite_z13.png');
+    }
+    [zoom > 13] {
+      marker-file: url('symbols/campsite3_.svg');
+      marker-fill: #006600;
+      marker-line-color: #fff;
+      marker-line-opacity: 0.7;
+      marker-line-width: 0.5;
+    }
   }
 }
 
