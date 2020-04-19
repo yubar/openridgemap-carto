@@ -19,60 +19,53 @@
 @wide-wrap-width: 45;
 @standard-line-spacing-size: -1.5;
 
-#mountain-ridges[zoom >= 10][feature = 'natural_ridge']{
-  ::fill {
-    line/line-color: @landform-color;
-    line/line-join: round;
-    line/line-cap: round;
-    line/line-width: 0;
-    [zoom >= 9]{
-    	[len >= 100]{line/line-width: @ridge-width-3;}
-    }
-    [zoom >= 10]{
-        [len >= 30]{line/line-width: @ridge-width-4;}
-        [len >= 50]{line/line-width: @ridge-width-3;}
-        [len >= 100]{line/line-width: @ridge-width-2;}
-    }
-    [zoom >= 11]{
-    	[len >= 5]{line/line-width: @ridge-width-4;}
-    	[len >= 10]{line/line-width: @ridge-width-3;}
-    	[len >= 30]{line/line-width: @ridge-width-2;}
-        [len >= 50]{line/line-width: @ridge-width-1;}
-    }
+
+#amenity-points {
+  [feature = 'peak'], [feature = 'volcano'],[feature = 'cave_entrance']{
     [zoom >= 12]{
-        [len >= 2]{line/line-width: @ridge-width-4;}
-        [len >= 5]{line/line-width: @ridge-width-3;}
-        [len >= 10]{line/line-width: @ridge-width-2;}
-        [len >= 30]{line/line-width: @ridge-width-1;}
-    }
-    [zoom >= 13]{
-    	[len >= 0]{line/line-width: @ridge-width-4;}
-    	[len >= 2]{line/line-width: @ridge-width-3;}
-    	[len >= 5]{line/line-width: @ridge-width-2;}
-        [len >= 10]{line/line-width: @ridge-width-1;}
+      marker-placement: interior;
+      marker-clip: false;
+
+      [feature = 'peak']{
+        marker-file: url('symbols/peak.svg');
+        marker-fill: @landform-color;
+        marker-line-color: #fff;
+        marker-line-opacity: 1;
+        marker-line-width: 1.25;
+      }
+      [feature = 'volcano']{
+        marker-file: url('symbols/peak.svg');
+        marker-fill: #d40000;
+      }
+      [feature = 'cave_entrance'][zoom >= 15] {
+        marker-file: url('symbols/cave.svg');
+      }
+
+      [zoom >= 13]{marker-transform: scale(1.6);}
+      [zoom >= 15]{marker-transform: scale(1.7);}
+      /*[zoom >= 16]{marker-transform: scale(1.8);}*/
     }
   }
 }
 
-#mountain-ridge-names[zoom >= 10][feature = 'natural_ridge']{
+#amenity-points {
+  [feature = 'peak'][zoom >= 12],
+  [feature = 'volcano'][zoom >= 12]{
     text-name: "[name]";
-    text-size: 16;
-    text-face-name: @oblique-fonts;
-    text-fill: #000;
-    text-halo-radius: 0;
-    text-halo-fill: #000;
-    text-spacing: 500;
-    [zoom = 11] {text-spacing: 1000;}
-    [zoom = 10] {text-spacing: 5000;}
-    text-character-spacing: 10;
-    text-placement: line;
-    text-align: center;
-    text-dy: 14;
-    text-transform: uppercase;
-    text-max-char-angle-delta: 90;
-    text-label-position-tolerance: 100;
-    text-allow-overlap: true;
+    text-size: @standard-font-size;
+    text-wrap-width: @standard-wrap-width;
+    text-line-spacing: @standard-line-spacing-size;
+    text-fill: darken(#d40000, 30%);
+    [feature = 'volcano'] { text-fill: #d40000; }
+    text-dy: 7;
+    
+    text-face-name: @standard-font;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+    text-placement: interior;
+  }
 }
+
 
 #mountain-passes{
   ::fill {
@@ -133,68 +126,6 @@
         text-dx: 16;
         text-dy: 16;
       }
-    }
-  }
-}
-
-#amenity-points {
-  [feature = 'natural_peak'], [feature = 'natural_volcano'],[feature = 'natural_cave_entrance']{
-    [zoom >= 12]{
-      marker-placement: interior;
-      marker-clip: false;
-
-      [feature = 'natural_peak']{
-        marker-file: url('symbols/peak.svg');
-        marker-fill: @landform-color;
-        marker-line-color: #fff;
-        marker-line-opacity: 1;
-        marker-line-width: 1.25;
-      }
-      [feature = 'natural_volcano']{
-        marker-file: url('symbols/peak.svg');
-        marker-fill: #d40000;
-      }
-      [feature = 'natural_cave_entrance'][zoom >= 15] {
-        marker-file: url('symbols/cave.svg');
-      }
-
-      [zoom >= 13]{marker-transform: scale(1.6);}
-      [zoom >= 15]{marker-transform: scale(1.7);}
-      /*[zoom >= 16]{marker-transform: scale(1.8);}*/
-    }
-  }
-}
-
-#amenity-points {
-  [feature = 'natural_peak'][zoom >= 12],
-  [feature = 'natural_volcano'][zoom >= 12]{
-    text-name: "[name]";
-    text-size: @standard-font-size;
-    text-wrap-width: @standard-wrap-width;
-    text-line-spacing: @standard-line-spacing-size;
-    text-fill: darken(#d40000, 30%);
-    [feature = 'natural_volcano'] { text-fill: #d40000; }
-    text-dy: 7;
-    
-    text-face-name: @standard-font;
-    text-halo-radius: @standard-halo-radius;
-    text-halo-fill: @standard-halo-fill;
-    text-placement: interior;
-  }
-}
-
-#amenity-points {
-  [feature = 'tourism_camp_site'][zoom >= 12]
-  {
-    [zoom <= 13] {
-      marker-file: url('symbols/campsite_z13.png');
-    }
-    [zoom > 13] {
-      marker-file: url('symbols/campsite.svg');
-      marker-fill: #006600;
-      marker-line-color: #fff;
-      marker-line-opacity: 0.7;
-      marker-line-width: 0.5;
     }
   }
 }
