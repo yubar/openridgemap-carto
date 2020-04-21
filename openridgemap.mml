@@ -52,7 +52,7 @@ Layer:
           'ridge' AS feature
           ,L.name
           ,L.geometry
-          ,L.len
+          ,COALESCE(R.len, L.len) AS len
         FROM
           public.osm_relief_line L
           LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
@@ -63,9 +63,30 @@ Layer:
             feature IN ('cliff', 'arete')
             AND RM.id IS NOT NULL
           )
-        ) AS amenity_points
+        ) AS ridges
     properties:
       minzoom: 9
+
+  - id: ridge-names
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          'ridge' AS feature
+          ,COALESCE(NULLIF(L.name,''), NULLIF(R.name,'')) "name"
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+        FROM 
+          public.osm_relief_line L
+          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
+        WHERE
+          L."name" <> ''
+          OR R."name" <>''
+        ) AS ridgenames
+    properties:
+      minzoom: 10
 
   - id: amenity-points
     class: points
@@ -138,6 +159,6 @@ Layer:
               osm_relief_point P  
             where
               feature = 'saddle'
-              OR mountain_pass='yes'
+              OR mountain_pass=true
           ) psss
         ) AS passes
