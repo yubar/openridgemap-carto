@@ -13,7 +13,7 @@ tables:
     - {key: name, name: name, type: string}
     - {key: ele, name: ele, type: string}
     - {key: natural, name: feature, type: string}
-    - {key: mountain_pass, name: mountain_pass, type: string}
+    - {key: mountain_pass, name: mountain_pass, type: bool}
     - {key: rtsa_scale, name: rtsa_scale, type: string}
 
   water_point:

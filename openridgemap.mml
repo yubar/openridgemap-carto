@@ -37,8 +37,35 @@ _parts:
 
 Stylesheet:
   - fonts.mss
-  - my.mss
+  - water.mss
+  - ridges.mss
+  - roads.mss
+  - points.mss
 Layer:
+  - id: ridges
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          'ridge' AS feature
+          ,L.name
+          ,L.geometry
+          ,L.len
+        FROM
+          public.osm_relief_line L
+          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
+        WHERE
+          feature = 'ridge'
+          OR (
+            feature IN ('cliff', 'arete')
+            AND RM.id IS NOT NULL
+          )
+        ) AS amenity_points
+    properties:
+      minzoom: 9
 
   - id: amenity-points
     class: points
@@ -105,7 +132,7 @@ Layer:
                   ELSE NULL
                END elevation
               ,name
-              ,120 AS angle
+              ,angle
               ,rtsa_scale
             FROM 
               osm_relief_point P  

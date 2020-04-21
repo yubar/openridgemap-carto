@@ -1,12 +1,27 @@
-ALTER TABLE planet_osm_rels ADD COLUMN IF NOT EXISTS len float;
+ALTER TABLE public.osm_ridge_rel ADD COLUMN IF NOT EXISTS len float;
 
+UPDATE public.osm_ridge_rel R SET len = t.len
+FROM 
+(
+	SELECT 
+		R.osm_id
+		, COUNT(*)
+		, ST_Length(
+			ST_AsText(ST_Transform(ST_Collect(L.geometry),26915))
+		)/1000 AS len
+	FROM 
+		public.osm_ridge_rel R
+		JOIN public.osm_ridge_rel_member RM ON R.osm_id = RM.osm_id
+		JOIN public.osm_relief_line L ON RM."member" = L.osm_id
+	GROUP BY R.osm_id
+) t
+WHERE t.osm_id = R.osm_id;
 
-UPDATE planet_osm_rels R
-SET len = 
-	ST_Length(ST_AsText(ST_Transform((
-		SELECT ST_Collect(way)
-		FROM planet_osm_line L 
-		WHERE L.osm_id = ANY (R.parts)
-	),26915)))/1000
-WHERE
-	tags::hstore->'natural' = 'ridge'
+ALTER TABLE public.osm_relief_line ADD COLUMN IF NOT EXISTS len float;
+
+UPDATE public.osm_relief_line 
+SET 
+	len = ST_Length(
+		ST_AsText(ST_Transform(geometry, 26915))
+	)/1000;
+	
