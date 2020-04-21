@@ -42,6 +42,23 @@ Stylesheet:
   - roads.mss
   - points.mss
 Layer:
+  - id: waterways
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,L.name
+          ,L.geometry
+          ,CASE WHEN seasonal <>'' OR intermittent <> '' THEN 1 ELSE NULL END intermittent
+        FROM
+          public.osm_waterway L
+        ) AS waterways
+    properties:
+      minzoom: 6
+
   - id: ridges
     geometry: linestring
     <<: *extents
