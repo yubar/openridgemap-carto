@@ -112,8 +112,10 @@ tables:
     - {name: osm_id, type: id}
     - {name: geometry, type: geometry}
     - {name: feature, type: mapping_value}
+    - {key: name, name: name, type: string}
     - {key: seasonal, name: seasonal, type: string}
     - {key: intermittent, name: intermittent, type: string}
+    - {name: area, type: area}
 
   ridge_rel:
     type: relation

@@ -59,6 +59,25 @@ Layer:
     properties:
       minzoom: 6
 
+  - id: waterareas
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          feature
+          ,name
+          ,geometry
+          ,CASE WHEN seasonal <>'' OR intermittent <> '' THEN 1 ELSE NULL END intermittent
+          ,area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS areapx
+        FROM
+          public.osm_water_poly
+        WHERE
+          area > 1*!pixel_width!::real*!pixel_height!::real
+        ) AS waterareas
+
+
   - id: ridges
     geometry: linestring
     <<: *extents
