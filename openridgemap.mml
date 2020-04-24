@@ -52,7 +52,7 @@ Layer:
           feature
           ,L.name
           ,L.geometry
-          ,CASE WHEN seasonal <>'' OR intermittent <> '' THEN 1 ELSE NULL END intermittent
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
         FROM
           public.osm_waterway L
         ) AS waterways
@@ -69,7 +69,7 @@ Layer:
           feature
           ,name
           ,geometry
-          ,CASE WHEN seasonal <>'' OR intermittent <> '' THEN 1 ELSE NULL END intermittent
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS areapx
         FROM
           public.osm_water_poly
@@ -123,6 +123,76 @@ Layer:
         ) AS ridgenames
     properties:
       minzoom: 10
+
+  - id: highways-lowzoom-casing
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+        FROM
+          public.osm_highway
+          WHERE feature IN ('motorway', 'trunk', 'primary')
+        ) AS highways
+    properties:
+      minzoom: 4
+
+  - id: highways-lowzoom
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+        FROM
+          public.osm_highway
+          WHERE feature IN ('motorway', 'trunk', 'primary')
+        ) AS highways
+    properties:
+      minzoom: 4
+
+  - id: highways-casing
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+        FROM
+          public.osm_highway
+        ) AS highways
+    properties:
+      minzoom: 8
+  - id: highways
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+          ,tracktype
+        FROM
+          public.osm_highway
+        ) AS highways
+    properties:
+      minzoom: 8
 
   - id: amenity-points
     class: points

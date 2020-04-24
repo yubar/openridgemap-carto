@@ -83,14 +83,13 @@ tables:
       highway: [__any__]
     filters:
       reject:
-        highway: [residential, service, living_street]
+        highway: [residential, service, living_street, construction, proposed, pedestrian]
       reject_regexp:
         highway: '_link$'
     columns:
     - {name: osm_id, type: id}
     - {name: geometry, type: geometry}
     - {name: feature, type: mapping_value}
-    - {key: name, name: name, type: string}
     - {key: bridge, name: bridge, type: string}
     - {key: highway, name: highway, type: string}
     - {key: tracktype, name: tracktype, type: string}
