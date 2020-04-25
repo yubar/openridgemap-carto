@@ -5,8 +5,8 @@
 @secondary: #FFFFD4;
 @tertiary: #FFF;
 @road: #FFF;
-@track: #1c1914;
-@footway: #4c4944;
+@track: #970202;
+@footway: #970202;
 
 
 
@@ -90,10 +90,16 @@
       line-width: 2;
       line-color: @road;
     }
-    [feature = 'track'] {
+    [feature = 'track'],[feature = 'cycleway'],[feature = 'bridleway']{
       line-color: @track;
       line-opacity: 0.8;
       line-width: 1.5;
+
+      [feature = 'cycleway'],[feature = 'bridleway'] { 
+        line-width: 1.2;
+        line-dasharray: 6,3,2,3;
+      }
+      
       [tracktype = 'grade1'] {
         line-dasharray: 100,0;
       }
@@ -110,73 +116,12 @@
         line-dasharray: 3,2;
       }
     }
+
+    [feature = 'footway'],[feature = 'path']{
+      line/line-color: @footway;
+      line/line-dasharray: 2,2;
+      line/line-width: 1.2;
+    }
+
   }
 }
-
-
-/*
-#highways {
-  [feature = 'unclassified'] {
-    [zoom >= 12] {
-      line/line-color: @track-fill;
-      
-      line/line-cap: round;
-      line/line-join: round;
-      line/line-clip:false;
-
-      line/line-width: @unclassified-width;
-    }
-  }
-
-  [feature = 'track'] {
-    [zoom >= 12] {
-      line/line-color: @track-fill;
-      
-      line/line-cap: round;
-      line/line-join: round;
-      line/line-opacity: 0.8;
-      line/line-clip:false;
-
-      line/line-width: @track-width;
-
-      [tracktype = 'grade1'] {
-        line/line-dasharray: 100,0;
-      }
-      [tracktype = 'grade2'] {
-        line/line-dasharray: 8.8,3.2;
-      }
-      [tracktype = 'grade3'] {
-        line/line-dasharray: 5.6,4.0;
-      }
-      [tracktype = 'grade4'] {
-        line/line-dasharray: 3.2,4.8;
-      }
-      [tracktype = 'grade5'] {
-        line/line-dasharray: 1.6,6.4;
-      }
-    }
-  }
-
-  [feature = 'unclassified'] {
-    [zoom >= 12] {
-      line/line-color: @unclassified-fill;
-      
-      line/line-cap: round;
-      line/line-join: round;
-      line/line-clip:false;
-
-      line/line-width: @unclassified-width*0.6;
-    }
-  }
-
-  [feature = 'footway'],[feature = 'path']{
-    [zoom >= 12] {
-      line/line-color: @footway-fill;
-      line/line-dasharray: 1,3;
-      line/line-join: round;
-      line/line-cap: round;
-      line/line-width: @footway-width;
-    }
-  }
-}
-*/

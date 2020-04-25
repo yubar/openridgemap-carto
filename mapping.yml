@@ -19,18 +19,19 @@ tables:
   water_point:
     type: point
     mapping:
-      natural: [spring]
+      natural: [spring, 'hot_spring']
       waterway: [waterfall]
-      "whitewater:rapid": [__any__]
+      "whitewater": [rapid]
       "whitewater:rapid_name": [__any__]
       "whitewater:rapid_grade": [__any__]
     columns:
     - {name: osm_id, type: id}
     - {name: geometry, type: geometry}
     - {key: name, name: name, type: string}
-    - {key: rapid, name: rapid, type: string}
-    - {key: rapid_name, name: rapid_name, type: string}
-    - {key: rapid_grade, name: rapid_grade, type: string}
+    - {key: whitewater, name: whitewater, type: string}
+    - {key: "whitewater:rapid_name", name: rapid_name, type: string}
+    - {key: "whitewater:rapid_grade", name: rapid_grade, type: string}
+    - {key: natural, name: natural, type: string}
     - {key: waterway, name: waterway, type: string}
     - {key: height, name: height, type: string}
 

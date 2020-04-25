@@ -194,6 +194,41 @@ Layer:
     properties:
       minzoom: 8
 
+  - id: water-points
+    class: points
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          CASE
+            WHEN waterway <> '' THEN waterway
+            WHEN whitewater = 'rapid' OR rapid_name<>'' OR rapid_grade<>'' THEN 'rapid'
+            WHEN "natural" <> '' THEN "natural"
+          END AS feature
+          ,CASE 
+            WHEN waterway <> '' THEN CONCAT(
+              "name"
+              ,CASE WHEN "name" <> '' AND height <> '' THEN ', ' END
+              ,CASE WHEN height <> ''THEN CONCAT(height, 'м') END
+              
+            )
+            WHEN "natural" <> '' THEN "name"
+            ELSE CONCAT(
+              rapid_name
+              ,CASE WHEN rapid_name <> '' AND rapid_grade <> '' THEN ' ' ELSE NULL END
+              ,CASE WHEN rapid_grade <> '' THEN CONCAT(rapid_grade, ' к.с.') ELSE NULL END
+            )
+          END AS "name"
+          ,height
+          ,geometry
+          ,angle
+        FROM public.osm_water_point
+        ) AS water_points
+    properties:
+      minzoom: 12
+
   - id: amenity-points
     class: points
     geometry: point
@@ -222,7 +257,7 @@ Layer:
           ORDER BY height DESC NULLS LAST
         ) AS amenity_points
     properties:
-      minzoom: 10
+      minzoom: 12
 
   - id: mountain-passes
     geometry: point
@@ -268,3 +303,5 @@ Layer:
               OR mountain_pass=true
           ) psss
         ) AS passes
+    properties:
+      minzoom: 12

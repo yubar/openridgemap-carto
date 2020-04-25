@@ -45,6 +45,64 @@
   }
 }
 
+
+#water-points {
+  [feature='rapid'],[feature='waterfall'] {
+    [zoom >= 12]{
+
+      [feature='rapid']{marker-file: url('symbols/rapid.svg');}
+      [feature='waterfall']{marker-file: url('symbols/waterfall.svg');}
+
+      marker-placement: interior;
+      marker-clip: false;
+      marker-line-color: @water-border-color;
+      marker-line-width: 0.5;
+      marker-transform: scale(1.5), rotate([angle]);
+      marker-allow-overlap: true;
+      
+      text-name: "[name]";
+      text-size: 10;
+      text-face-name: @oblique-fonts;
+      text-fill: @water-text;
+      text-halo-radius: @water-halo-radius;
+      text-halo-fill: @water-halo-fill;
+
+      text-placement: interior;
+      text-character-spacing: -0.7;
+
+      text-allow-overlap: true;
+
+      text-dx: 5;
+      text-dy: 5;
+
+      [zoom >= 13] {
+        marker-transform: scale(2), rotate([angle]);
+        text-dx: 7;
+        text-dy: 7;
+        text-size: 11;
+      }
+      [zoom >= 14] {
+        marker-transform: scale(3), rotate([angle]);
+        text-dx: 9;
+        text-dy: 9;
+      }
+      [zoom >= 15] {
+        marker-transform: scale(3.5), rotate([angle]);
+        text-dx: 10;
+        text-dy: 10;
+        text-size: 12;
+      }
+    }
+  }
+
+  [feature='spring'],[feature='hot_spring'] {
+    [zoom >= 12]{
+      marker-file: url('symbols/spring.svg');
+    }
+  }
+}
+
+
 #amenity-points {
   [feature = 'peak'][zoom >= 12],
   [feature = 'volcano'][zoom >= 12]{

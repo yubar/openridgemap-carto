@@ -96,11 +96,14 @@
   		}
 
       	[feature != 'glacier'][intermittent != 1] {
-        	polygon-fill: @water-color;
+        	polygon-fill: darken(@water-color, 15%);
 				
-	        line-color: lighten(@water-border-color, 20%);
-	        line-width: 0.5;
-
+	        [zoom >= 7]{
+	        	line-color: lighten(@water-border-color, 20%);
+	        	polygon-fill: @water-color;
+	        	line-width: 0.3;
+	        }
+	        [zoom >= 9]{line-width: 0.5;}
 	        [zoom >= 11]{
 	          line-color: @water-border-color;
 	          line-width: 1;
