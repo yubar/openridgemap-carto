@@ -18,14 +18,13 @@
 		[zoom >= 9]  { line-width: 1.2; }
 	    [zoom >= 10] { line-width: 1.5; }
 	    [zoom >= 13] { line-width: 2; }
-	    [zoom >= 14] { line-width: 4; }
-	    [zoom >= 15] { line-width: 5; }
-	    [zoom >= 17] { line-width: 8; }
-	    [zoom >= 18] { line-width: 10; }
+	    [zoom >= 14] { line-width: 3; }
+	    [zoom >= 15] { line-width: 4; }
 
-	    
     }
   }
+
+
 
   [feature = 'stream'],
   [feature = 'ditch'],
@@ -37,7 +36,7 @@
 	  	line-color: @water-border-color;
   		[zoom <= 12] {line-width: 0.5;}
   		[zoom >= 13] {line-width: 1;}
-		[zoom >= 15] {line-width: 3;}
+		[zoom >= 15] {line-width: 2.5;}
 
   	}
 
@@ -108,7 +107,26 @@
 }
 
 
-#waterways {
+#waterway-text {
+
+	[feature = 'river']
+  	,[feature = 'canal']{
+		[zoom >= 10]{
+			text-name: "[name]";
+			text-size: 10;
+			text-face-name: @oblique-fonts;
+			text-fill: @water-text;
+			text-halo-radius: @water-halo-radius;
+			text-halo-fill: @water-halo-fill;
+			text-spacing: 250;
+			text-placement: line;
+			text-repeat-distance: @waterway-text-repeat-distance;
+			text-dy: 2;
+			[zoom >= 12] { text-size: 12; }
+			[zoom >= 14] { text-size: 14; }
+		}
+	}
+
 	[feature = 'stream'],
 	[feature = 'ditch'],
 	[feature = 'wadi'],
@@ -131,21 +149,5 @@
 		}
 	}
 
-	[feature = 'river']
-  	,[feature = 'canal']{
-		[zoom >= 10]{
-			text-name: "[name]";
-			text-size: 10;
-			text-face-name: @oblique-fonts;
-			text-fill: @water-text;
-			text-halo-radius: @water-halo-radius;
-			text-halo-fill: @water-halo-fill;
-			text-spacing: 250;
-			text-placement: line;
-			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 2;
-			[zoom >= 12] { text-size: 12; }
-			[zoom >= 14] { text-size: 14; }
-		}
-	}
+	
 }

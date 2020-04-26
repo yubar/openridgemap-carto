@@ -1,8 +1,8 @@
-@landform-text: #7f0000;
+@landform-text: #42170a;
 @amenity-color: #B40486;
 
 
-#amenity-points {
+#relief-points {
   [feature = 'peak'], [feature = 'volcano']{
     [zoom >= 12]{
       marker-placement: interior;
@@ -10,7 +10,7 @@
       marker-clip: false;
 
       [feature = 'peak']{
-        marker-file: url('symbols/peak.svg');
+        marker-file: url('symbols/peak_otm.png');
         marker-fill: @landform-color;
         marker-line-color: #fff;
         marker-line-opacity: 1;
@@ -20,10 +20,11 @@
         marker-file: url('symbols/peak.svg');
         marker-fill: #d40000;
       }
-
+      /*
       [zoom >= 13]{marker-transform: scale(1.6);}
       [zoom >= 15]{marker-transform: scale(1.7);}
-      /*[zoom >= 16]{marker-transform: scale(1.8);}*/
+      [zoom >= 16]{marker-transform: scale(1.8);}
+      */
     }
   }
 }
@@ -44,7 +45,7 @@
       marker-allow-overlap: true;
       
       text-name: "[name]";
-      text-size: 10;
+      text-size: 9;
       text-face-name: @oblique-fonts;
       text-fill: @water-text;
       text-halo-radius: @water-halo-radius;
@@ -97,19 +98,20 @@
 }
 
 
-#amenity-points {
+#relief-points {
   [feature = 'peak'][zoom >= 12],
   [feature = 'volcano'][zoom >= 12]{
     text-name: "[name]";
-    text-size: @standard-font-size;
-    text-wrap-width: @standard-wrap-width;
-    text-line-spacing: @standard-line-spacing-size;
+    text-size: 9;
+    text-wrap-width: 100;
+    text-line-spacing: 1;
     text-fill: @landform-text;
     [feature = 'volcano'] { text-fill: #d40000; }
-    text-dy: 7;
+    text-dy: 3;
     
-    text-face-name: @standard-font;
-    text-halo-radius: @standard-halo-radius;
+    
+    text-face-name: @oblique-fonts;
+    text-halo-radius: 1.5;
     text-halo-fill: @standard-halo-fill;
     text-placement: interior;
   }
@@ -136,21 +138,20 @@
       [rtsa_scale='3Б'],[rtsa_scale='3Б*']{marker-fill: #E6191D;}
 
       text-name: "[name]";
-      text-size: @standard-font-size;
-      text-wrap-width: @wide-wrap-width;
-      text-line-spacing: @standard-line-spacing-size;
+      text-size: 9;
+      text-wrap-width: 40;
+      text-line-spacing: -1.5;
       
 
       text-dx: 10;
       text-dy: 10;
-      /*text-face-name: "Liberation Sans Narrow Bold";
-      text-fill: lighten(saturate(@landform-color, 30%), 50%);
-      text-halo-fill: @landform-outline-color;*/
-      text-face-name: @oblique-fonts;
-      text-fill: @landform-text;
-      text-halo-fill: @standard-halo-fill;
 
-      text-halo-radius: @standard-halo-radius;
+      text-face-name: @standard-font;
+      text-fill: @landform-text;
+      
+      text-halo-fill: rgba(255, 255, 255, 0.8);
+      text-halo-radius: 1.5;
+
       text-placement: interior;
       text-character-spacing: -0.7;
       text-placement-type: simple;
@@ -160,6 +161,7 @@
       [angle >= 67.5][angle < 112.5],[angle >= -112.5][angle < -67.5] {text-placements: "S,N,SW,SE,NW,NE,W,E,10,9,8";}
       [angle >= 112.5][angle < 157.5],[angle >= -67.5][angle < -22.5] {text-placements: "SW,NE,S,N,W,E,SE,NW,10,9,8";}
 
+      [zoom >= 13]{ text-size: 10; }
       [zoom = 14]{
         marker-transform: scale(1.4), rotate([angle]);
         text-dx: 12;

@@ -8,22 +8,19 @@
 @track: #970202;
 @footway: #970202;
 
-
-#highways-lowzoom-casing {
-
-  [feature = 'motorway'],[feature = 'trunk'] {
-    line-color: @casing;
-    [zoom <= 5] {line-width: 1;}
-    [zoom > 5][zoom <= 8] {line-width: 2;}
-  }
-
-  [feature = 'primary'][zoom >= 6] {
-    line-color: @casing;
-    line-width: 2;
-  }
-}
-
 #highways-lowzoom {
+  ::casing {
+    [feature = 'motorway'],[feature = 'trunk'] {
+      line-color: @casing;
+      [zoom <= 5] {line-width: 1;}
+      [zoom > 5][zoom <= 8] {line-width: 2;}
+    }
+
+    [feature = 'primary'][zoom >= 6] {
+      line-color: @casing;
+      line-width: 2;
+    }
+  }
 
   [feature = 'motorway'],[feature = 'trunk'] {
     [zoom <= 5] {line-width: 0.7;}
@@ -39,31 +36,31 @@
   }
 }
 
-
-#highways-casing{
-  [zoom >= 8]{
-    [feature = 'motorway'],[feature = 'trunk']
-    ,[feature = 'primary'],[feature = 'secondary'] {
-      line-width: 2.6;
-      line-color: @casing;
-    }
-  }
-  [zoom >= 10]{
-    [feature = 'motorway'],[feature = 'trunk']
-    ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
-      line-width: 3.9;
-      line-color: @casing;
-    }
-  }
-  [zoom >= 12] {
-    [feature = 'road'],[feature = 'unclassified'] {
-      line-width: 2.6;
-      line-color: @casing;
-    }
-  }
-}
-
 #highways {
+
+  ::casing {
+    [zoom >= 8]{
+      [feature = 'motorway'],[feature = 'trunk']
+      ,[feature = 'primary'],[feature = 'secondary'] {
+        line-width: 2.6;
+        line-color: @casing;
+      }
+    }
+    [zoom >= 10]{
+      [feature = 'motorway'],[feature = 'trunk']
+      ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
+        line-width: 3.5;
+        line-color: @casing;
+        [feature = 'tertiary'] {line-width: 3.0;}
+      }
+    }
+    [zoom >= 12] {
+      [feature = 'road'],[feature = 'unclassified'] {
+        line-width: 2.6;
+        line-color: @casing;
+      }
+    }
+  }
 
   [feature = 'motorway'] {line-color: @motorway;}
   [feature = 'trunk'] {line-color: @trunk;}
@@ -80,7 +77,7 @@
   [zoom >= 10]{
     [feature = 'motorway'],[feature = 'trunk']
     ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
-      line-width: 3;
+      line-width: 2.5;
       [feature = 'tertiary'] {line-color: @tertiary;}
     }
   }

@@ -80,7 +80,6 @@ Layer:
       table: |-
         (SELECT 
           feature
-          ,L.name
           ,L.geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
         FROM
@@ -106,7 +105,6 @@ Layer:
         WHERE
           area > 1*!pixel_width!::real*!pixel_height!::real
         ) AS waterareas
-
 
   - id: ridges
     geometry: linestring
@@ -155,24 +153,6 @@ Layer:
     properties:
       minzoom: 9
 
-  - id: highways-lowzoom-casing
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT 
-          feature
-          ,geometry
-          ,bridge
-          ,surface
-        FROM
-          public.osm_highway
-          WHERE feature IN ('motorway', 'trunk', 'primary')
-        ) AS highways
-    properties:
-      minzoom: 4
-
   - id: highways-lowzoom
     geometry: linestring
     <<: *extents
@@ -190,23 +170,6 @@ Layer:
         ) AS highways
     properties:
       minzoom: 4
-
-  - id: highways-casing
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT 
-          feature
-          ,geometry
-          ,bridge
-          ,surface
-        FROM
-          public.osm_highway
-        ) AS highways
-    properties:
-      minzoom: 8
 
   - id: highways
     geometry: linestring
@@ -261,7 +224,24 @@ Layer:
     properties:
       minzoom: 12
 
-  - id: amenity-points
+  - id: waterway-text
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,L.name
+          ,L.geometry
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+        FROM
+          public.osm_waterway L
+        ) AS waterways
+    properties:
+      minzoom: 10
+
+  - id: relief-points
     class: points
     geometry: point
     <<: *extents
@@ -272,8 +252,8 @@ Layer:
             geometry
             ,CONCAT(
                 name
-                ,CASE WHEN name IS NOT NULL AND height IS NOT NULL THEN E'\n' ELSE NULL END
-                ,CASE WHEN height IS NOT NULL THEN CONCAT(ROUND(height)::TEXT, U&'\00A0', 'm') ELSE NULL END
+                ,CASE WHEN name <> '' AND height IS NOT NULL THEN E'\n' ELSE NULL END
+                ,height::TEXT
               ) AS name
             ,feature
           FROM (
@@ -287,7 +267,7 @@ Layer:
             WHERE feature IN ('peak', 'volcano') 
           ) t
           ORDER BY height DESC NULLS LAST
-        ) AS amenity_points
+        ) AS relief_points
     properties:
       minzoom: 12
 

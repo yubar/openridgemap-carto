@@ -1,9 +1,8 @@
-@standard-halo-radius: 2;
-@standard-halo-fill: rgba(255,255,255,0.5);
+@standard-halo-radius: 1;
+@standard-halo-fill: rgba(255,255,255,0.7);
 
-@land-color: #f2efe9;
-@landform-color: darken(#b46e31, 25%);
-@landform-outline-color: darken(#643d1b, 30%);
+@land-color: #f4f0ec;
+@landform-color: #5c2800;
 
 
 @water-color: #aad3df;
