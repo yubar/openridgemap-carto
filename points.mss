@@ -1,29 +1,12 @@
-@water-color: #aad3df;
-@water-border-color: darken(#0066cc, 15%);
-@land-color: #f2efe9;
-
-@standard-halo-radius: 2;
-@standard-halo-fill: rgba(255,255,255,0.5);
-
-@landform-color: darken(#b46e31, 25%);
-@landform-outline-color: darken(#643d1b, 30%);
-
-@ridge-width-4: 1;
-@ridge-width-3: 2;
-@ridge-width-2: 3;
-@ridge-width-1: 4;
-
-@standard-font: @book-fonts;
-@standard-font-size: 10;
-@standard-wrap-width: 30;
-@wide-wrap-width: 45;
-@standard-line-spacing-size: -1.5;
+@landform-text: #7f0000;
+@amenity-color: #B40486;
 
 
 #amenity-points {
   [feature = 'peak'], [feature = 'volcano']{
     [zoom >= 12]{
       marker-placement: interior;
+      marker-allow-overlap: true;
       marker-clip: false;
 
       [feature = 'peak']{
@@ -97,7 +80,18 @@
 
   [feature='spring'],[feature='hot_spring'] {
     [zoom >= 12]{
+      marker-transform: scale(0.5);
+      marker-fill: @water-border-color;
+      marker-line-color: @standard-halo-fill;
+      marker-line-width: 1;
       marker-file: url('symbols/spring.svg');
+      marker-allow-overlap: true;
+      [feature='hot_spring'] {
+        marker-fill: #d40000;
+      }
+      [zoom >= 15]{
+        marker-transform: scale(1);
+      }
     }
   }
 }
@@ -110,7 +104,7 @@
     text-size: @standard-font-size;
     text-wrap-width: @standard-wrap-width;
     text-line-spacing: @standard-line-spacing-size;
-    text-fill: darken(#d40000, 30%);
+    text-fill: @landform-text;
     [feature = 'volcano'] { text-fill: #d40000; }
     text-dy: 7;
     
@@ -153,7 +147,7 @@
       text-fill: lighten(saturate(@landform-color, 30%), 50%);
       text-halo-fill: @landform-outline-color;*/
       text-face-name: @oblique-fonts;
-      text-fill: darken(#d40000, 30%);
+      text-fill: @landform-text;
       text-halo-fill: @standard-halo-fill;
 
       text-halo-radius: @standard-halo-radius;
@@ -166,12 +160,12 @@
       [angle >= 67.5][angle < 112.5],[angle >= -112.5][angle < -67.5] {text-placements: "S,N,SW,SE,NW,NE,W,E,10,9,8";}
       [angle >= 112.5][angle < 157.5],[angle >= -67.5][angle < -22.5] {text-placements: "SW,NE,S,N,W,E,SE,NW,10,9,8";}
 
-      [zoom >= 14]{
+      [zoom = 14]{
         marker-transform: scale(1.4), rotate([angle]);
         text-dx: 12;
         text-dy: 12;
       }
-      [zoom >= 15]{
+      [zoom = 15]{
         marker-transform: scale(1.6), rotate([angle]);
         text-dx: 14;
         text-dy: 14;
@@ -185,3 +179,26 @@
   }
 }
 
+#other-points {
+  [zoom >= 12]{
+
+    [feature = 'wilderness_hut'] { marker-file: url('symbols/hut_wilderness.svg'); }
+    [feature = 'alpine_hut'] { marker-file: url('symbols/hut_alpine.svg'); }
+    [feature = 'basic_hut'] { marker-file: url('symbols/hut_basic.svg'); }
+    [feature = 'shelter'] { marker-file: url('symbols/hut_shelter.svg'); }
+    [feature = 'camp_site'] { marker-file: url('symbols/campsite.svg'); }
+    
+    marker-line-color: @amenity-color;
+    marker-fill: @amenity-color;
+    marker-allow-overlap: true;
+    
+    [feature = 'camp_site'][zoom <= 13] {
+      marker-file: url('symbols/campsite_z13.png');
+    }
+    [zoom = 14]{ marker-transform: scale(1.4); }
+    [zoom = 15]{ marker-transform: scale(1.6); }
+    [zoom >= 16]{ marker-transform: scale(1.8); }
+
+  }
+  
+}

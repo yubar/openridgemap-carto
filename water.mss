@@ -1,24 +1,3 @@
-@water-text: @water-border-color;
-@glacier: rgba(0,187,255,0.1);
-@glacier-lowzoom: rgba(0,187,255,0.2);
-@glacier-line: #389cff;
-
-@waterway-text-repeat-distance: 100;
-
-@water-halo-radius: 1;
-@water-halo-fill: rgba(255,255,255,0.7);
-
-@landcover-font-size: 10;
-@landcover-wrap-width-size: 30; // 3 em
-@landcover-line-spacing-size: -1.5; // -0.15 em
-@landcover-font-size-big: 12;
-@landcover-wrap-width-size-big: 36; // 3 em
-@landcover-line-spacing-size-big: -1.8; // -0.15 em
-@landcover-font-size-bigger: 15;
-@landcover-wrap-width-size-bigger: 45; // 3 em
-@landcover-line-spacing-size-bigger: -2.25; // -0.15 em
-@landcover-face-name: @oblique-fonts;
-
 #waterways {
 
   [feature = 'river']
@@ -33,7 +12,7 @@
 		}
 
 	    line-color: @water-border-color;
-	    [zoom < 11] {line-color: lighten(@water-border-color, 20%)}
+	    [zoom < 11] {line-color: @water-border-color-lz}
 
 		line-width: 0.7;
 		[zoom >= 9]  { line-width: 1.2; }
@@ -96,10 +75,10 @@
   		}
 
       	[feature != 'glacier'][intermittent != 1] {
-        	polygon-fill: darken(@water-color, 15%);
+        	polygon-fill: @water-color-lz;
 				
 	        [zoom >= 7]{
-	        	line-color: lighten(@water-border-color, 20%);
+	        	line-color: @water-border-color-lz;
 	        	polygon-fill: @water-color;
 	        	line-width: 0.3;
 	        }

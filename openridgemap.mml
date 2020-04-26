@@ -37,11 +37,41 @@ _parts:
 
 Stylesheet:
   - fonts.mss
+  - styles.mss
+  - shapefiles.mss
   - water.mss
   - ridges.mss
   - roads.mss
   - points.mss
 Layer:
+  - id: ocean-lz
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      file: data/simplified-water-polygons-split-3857/simplified_water_polygons.shp
+      type: shape
+    properties:
+     maxzoom: 9
+
+  - id: ocean
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      file: data/water-polygons-split-3857/water_polygons.shp
+      type: shape
+    properties:
+      minzoom: 10
+
+  - id: necountries
+    geometry: linestring
+    <<: *extents84
+    Datasource:
+      file: data/ne_110m_admin_0_boundary_lines_land/ne_110m_admin_0_boundary_lines_land.shp
+      type: shape
+    properties:
+      minzoom: 1
+      maxzoom: 4
+
   - id: waterways
     geometry: linestring
     <<: *extents
@@ -113,6 +143,7 @@ Layer:
           'ridge' AS feature
           ,COALESCE(NULLIF(L.name,''), NULLIF(R.name,'')) "name"
           ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+          ,COALESCE(R.len, L.len) AS len
         FROM 
           public.osm_relief_line L
           LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
@@ -122,7 +153,7 @@ Layer:
           OR R."name" <>''
         ) AS ridgenames
     properties:
-      minzoom: 10
+      minzoom: 9
 
   - id: highways-lowzoom-casing
     geometry: linestring
@@ -176,6 +207,7 @@ Layer:
         ) AS highways
     properties:
       minzoom: 8
+
   - id: highways
     geometry: linestring
     <<: *extents
@@ -303,5 +335,24 @@ Layer:
               OR mountain_pass=true
           ) psss
         ) AS passes
+    properties:
+      minzoom: 12
+
+  - id: other-points
+    class: points
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          CASE WHEN shelter_type='basic_hut' THEN 'basic_hut'
+            ELSE feature
+          END feature
+          ,geometry
+          ,name
+        FROM
+          public.osm_other_point P
+        ) AS other_points
     properties:
       minzoom: 12

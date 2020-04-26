@@ -9,7 +9,6 @@
 @footway: #970202;
 
 
-
 #highways-lowzoom-casing {
 
   [feature = 'motorway'],[feature = 'trunk'] {

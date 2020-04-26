@@ -45,6 +45,7 @@ tables:
     - {name: geometry, type: geometry}
     - {name: feature, type: mapping_value}
     - {key: name, name: name, type: string}
+    - {key: shelter_type, name: shelter_type, type: string}
 
 
   relief_line:
