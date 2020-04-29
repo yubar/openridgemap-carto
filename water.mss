@@ -1,25 +1,80 @@
+@waterway-width-4: 0.5;
+@waterway-width-3: 1.0;
+@waterway-width-2: 1.5;
+@waterway-width-1: 2.0;
+
+/*
+@water-border-color-zz: #AA0000;
+#waterways-gen{
+
+	[zoom <= 4][len > 1000]{
+	    line-color: @water-border-color-zz;
+		line-width: 0.2;
+		[len > 2500]{ line-width: 0.4; }
+	}
+	[zoom > 4][zoom <= 8][len > 100]{
+	    line-color: @water-border-color-zz;
+		line-width: 0.2;
+		[len > 250]{ line-width: 0.4; }
+		[len > 500]{ line-width: 0.8; }
+		[len > 1000]{ line-width: 1.2; }
+	}
+	[zoom > 8]{
+	    line-color: @water-border-color-zz;
+		line-width: 0.4;
+		[len > 250]{ line-width: 0.8; }
+		[len > 500]{ line-width: 1.2; }
+		[len > 1000]{ line-width: 1.6; }
+	}
+}
+*/
+
 #waterways {
 
   [feature = 'river']
   ,[feature = 'canal']{
   	[zoom >= 8]{
 
-	  	[intermittent = 1] {
-		    line-dasharray: 8,4; 
-		    line-cap: butt;
-		    line-join: round;
-		    line-clip: false;
-		}
-
+		line-width: 0;
 	    line-color: @water-border-color;
+		line-cap: butt;
+		line-join: round;
+		line-clip: false;
+
+		[intermittent = 1] {
+		    line-dasharray: 8,4; 
+		}
+		
 	    [zoom < 11] {line-color: @water-border-color-lz}
 
-		line-width: 0.7;
-		[zoom >= 9]  { line-width: 1.2; }
-	    [zoom >= 10] { line-width: 1.5; }
-	    [zoom >= 13] { line-width: 2; }
-	    [zoom >= 14] { line-width: 3; }
-	    [zoom >= 15] { line-width: 4; }
+	    [zoom = 8]{
+	    	[len >= 30]{ line-width: @waterway-width-4; }
+	    	[len >= 50]{ line-width: @waterway-width-3; }
+	    }
+	    [zoom = 9]{
+	    	[len >= 10]{ line-width: @waterway-width-4; }
+	    	[len >= 30]{ line-width: @waterway-width-3; }
+	    	[len >= 50]{ line-width: @waterway-width-2; }
+
+	    }
+	    [zoom = 10]{
+	        [len >= 5]{ line-width: @waterway-width-4; }
+	        [len >= 10]{ line-width: @waterway-width-3; }
+	        [len >= 30]{ line-width: @waterway-width-2; }
+	        [len >= 50]{ line-width: @waterway-width-1; }
+	    }
+	    [zoom = 11]{
+	        [len >= 2]{ line-width: @waterway-width-4; }
+	        [len >= 5]{ line-width: @waterway-width-3; }
+	        [len >= 10]{ line-width: @waterway-width-2; }
+	        [len >= 30]{ line-width: @waterway-width-1; }
+	    }
+	    [zoom >= 12]{
+	        [len >= 0]{ line-width: @waterway-width-4; }
+	        [len >= 2]{ line-width: @waterway-width-3; }
+	        [len >= 5]{ line-width: @waterway-width-2; }
+	        [len >= 10]{ line-width: @waterway-width-1; }
+	    }
 
     }
   }

@@ -1,10 +1,11 @@
+
 #ocean-lz {
   polygon-fill: @water-color;
   [zoom <= 6]{ polygon-fill: @water-color-lz; }
 }
 
 #ocean {
-  polygon-fill: @water-color;
+  [zoom > 6] { polygon-fill: @water-color; }
 }
 
 #necountries {
@@ -16,6 +17,18 @@
     [zoom >= 3] {
       line-width: 0.4;
     }
-    line-color: @admin-boundaries;
+    line-color: @boundary-color-lz;
   }
+}
+
+#boundaries{  
+  line-color: @boundary-color-mz;
+  line-width: 1; 
+  [zoom >= 9] { 
+    line-width: 2; 
+    line-color: @boundary-color;
+  }
+  [zoom = 10] { line-width: 4; }
+  [zoom = 11] { line-width: 6; }
+  [zoom >= 12] { line-width: 8; }
 }

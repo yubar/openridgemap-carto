@@ -1,5 +1,5 @@
-@landform-text: #42170a;
-@amenity-color: #B40486;
+@landform-text: #401a10;
+@amenity-color: #b00090;
 
 
 #relief-points {
@@ -44,31 +44,41 @@
       marker-transform: scale(1.5), rotate([angle]);
       marker-allow-overlap: true;
       
-      text-name: "[name]";
-      text-size: 9;
-      text-face-name: @oblique-fonts;
-      text-fill: @water-text;
-      text-halo-radius: @water-halo-radius;
-      text-halo-fill: @water-halo-fill;
-
-      text-placement: interior;
-      text-character-spacing: -0.7;
-
-      text-allow-overlap: true;
-
-      text-dx: 5;
-      text-dy: 5;
+      [feature='rapid'] {
+        text-name: "[name]";
+        text-size: 9;
+        text-face-name: @oblique-fonts;
+        text-fill: @water-text;
+        text-halo-radius: @water-halo-radius;
+        text-halo-fill: @water-halo-fill;
+        text-placement: interior;
+        text-character-spacing: -0.7;
+        text-allow-overlap: true;
+        text-dx: 5;
+        text-dy: 5;
+      }
 
       [zoom >= 13] {
         marker-transform: scale(2), rotate([angle]);
-        text-dx: 7;
-        text-dy: 7;
-        text-size: 11;
+        [feature='rapid'] {
+          text-dx: 7;
+          text-dy: 7;
+          text-size: 10;
+        }
       }
       [zoom >= 14] {
         marker-transform: scale(3), rotate([angle]);
         text-dx: 9;
         text-dy: 9;
+        text-name: "[name]";
+        text-size: 11;
+        text-face-name: @oblique-fonts;
+        text-fill: @water-text;
+        text-halo-radius: @water-halo-radius;
+        text-halo-fill: @water-halo-fill;
+        text-placement: interior;
+        text-character-spacing: -0.7;
+        text-allow-overlap: true;
       }
       [zoom >= 15] {
         marker-transform: scale(3.5), rotate([angle]);
@@ -81,7 +91,7 @@
 
   [feature='spring'],[feature='hot_spring'] {
     [zoom >= 12]{
-      marker-transform: scale(0.5);
+      marker-transform: scale(0.5), translate(0, 9);
       marker-fill: @water-border-color;
       marker-line-color: @standard-halo-fill;
       marker-line-width: 1;
@@ -91,7 +101,7 @@
         marker-fill: #d40000;
       }
       [zoom >= 15]{
-        marker-transform: scale(1);
+        marker-transform: scale(1), translate(0, 9);
       }
     }
   }

@@ -51,7 +51,7 @@ Layer:
       file: data/simplified-water-polygons-split-3857/simplified_water_polygons.shp
       type: shape
     properties:
-     maxzoom: 9
+     maxzoom: 6
 
   - id: ocean
     geometry: polygon
@@ -60,7 +60,7 @@ Layer:
       file: data/water-polygons-split-3857/water_polygons.shp
       type: shape
     properties:
-      minzoom: 10
+      minzoom: 7
 
   - id: necountries
     geometry: linestring
@@ -72,6 +72,23 @@ Layer:
       minzoom: 1
       maxzoom: 4
 
+  # - id: waterways-gen
+  #   geometry: linestring
+  #   <<: *extents
+  #   Datasource:
+  #     <<: *osm2pgsql
+  #     table: |-
+  #       (SELECT 
+  #         feature
+  #         ,"name"
+  #         ,L.geometry
+  #         ,len
+  #       FROM
+  #         public.osm_waterway_gen L
+  #       ) AS waterways_gen
+  #   properties:
+  #     maxzoom: 10
+
   - id: waterways
     geometry: linestring
     <<: *extents
@@ -82,11 +99,14 @@ Layer:
           feature
           ,L.geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+          ,COALESCE(R.len, L.len) AS len
         FROM
           public.osm_waterway L
+          LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
         ) AS waterways
     properties:
-      minzoom: 6
+      minzoom: 8
 
   - id: waterareas
     geometry: polygon
@@ -105,6 +125,19 @@ Layer:
         WHERE
           area > 1*!pixel_width!::real*!pixel_height!::real
         ) AS waterareas
+
+  - id: boundaries
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          geometry 
+        FROM public.osm_boundary
+        ) AS boundaries
+    properties:
+      minzoom: 5
 
   - id: ridges
     geometry: linestring
@@ -129,7 +162,7 @@ Layer:
           )
         ) AS ridges
     properties:
-      minzoom: 9
+      minzoom: 11
 
   - id: ridge-names
     geometry: linestring

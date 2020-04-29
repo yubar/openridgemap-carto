@@ -14,7 +14,7 @@ FROM
 	,eps
 WHERE 
 	P.mountain_pass = TRUE
-	AND ST_DWithin(P.geometry, L.geometry, 0);
+	AND ST_DWithin(P.geometry, L.geometry, 0.1);
 
 	
 ALTER TABLE public.osm_water_point ADD COLUMN IF NOT EXISTS angle float;
@@ -36,4 +36,4 @@ WHERE
 		P.waterway = 'waterfall'
 		OR P.whitewater = 'rapid' OR rapid_name<>'' OR rapid_grade<>''
 	)
-	AND ST_DWithin(P.geometry, L.geometry, 0);
+	AND ST_DWithin(P.geometry, L.geometry, 0.1);

@@ -135,3 +135,30 @@ tables:
     relation_types: [multilinestring]
     mapping:
       natural: [ridge]
+
+  waterway_rel:
+    type: relation
+    columns:
+    - {name: osm_id, type: id}
+    - {key: name, name: name, type: string}
+    relation_types: [waterway]
+    mapping:
+      waterway: [river]
+
+  waterway_rel_member:
+    type: relation_member
+    columns:
+    - {name: osm_id, type: id}
+    - {name: member, type: member_id}
+    relation_types: [waterway]
+    mapping:
+      waterway: [river]
+
+  boundary:
+    type: linestring
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    relation_types: [boundary]
+    mapping:
+      admin_level: ["2"]

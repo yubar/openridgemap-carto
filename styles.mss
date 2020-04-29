@@ -3,6 +3,9 @@
 
 @land-color: #f4f0ec;
 @landform-color: #5c2800;
+@boundary-color-lz: #c700e6;
+@boundary-color-mz: fadeout(@boundary-color-lz, 50%);
+@boundary-color: fadeout(@boundary-color-lz, 80%);
 
 
 @water-color: #aad3df;
@@ -19,7 +22,7 @@
 @glacier-lowzoom: rgba(0,187,255,0.2);
 @glacier-line: #389cff;
 
-@admin-boundaries: #8d618b;
+
 
 @standard-font: @book-fonts;
 @standard-font-size: 10;
