@@ -3,15 +3,15 @@
    xmlns="http://www.w3.org/2000/svg"
    version="1.1"
    width="10"
-   height="5"
-   viewBox="0 0 8 4">
+   height="6"
+   viewBox="0 0 8 5">
   <rect
      width="8"
-     height="4"
+     height="5"
      x="0"
      y="0"
      id="canvas"
      style="fill:none;stroke:none;visibility:hidden" />
-   <path d="M0,1 L2,2 4,1 6,2 8,1" style="fill:none;stroke:black;stroke-width:0.5" />
-   <path d="M0,2 L2,3 4,2 6,3 8,2" style="fill:none;stroke:black;stroke-width:0.5" />
+   <path d="M0,1 L4,3 8,1" style="fill:none;stroke:black;stroke-width:0.5" />
+   <path d="M0,2 L4,4 8,2" style="fill:none;stroke:black;stroke-width:0.5" />
 </svg>

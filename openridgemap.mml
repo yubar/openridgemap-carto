@@ -137,7 +137,7 @@ Layer:
         FROM public.osm_boundary
         ) AS boundaries
     properties:
-      minzoom: 5
+  #     minzoom: 5
 
   - id: ridges
     geometry: linestring
@@ -281,75 +281,38 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
-            geometry
-            ,CONCAT(
-                name
-                ,CASE WHEN name <> '' AND height IS NOT NULL THEN E'\n' ELSE NULL END
-                ,height::TEXT
-              ) AS name
-            ,feature
-          FROM (
-            SELECT
-              *
-              ,CASE
-                      WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN ele::NUMERIC
-                      ELSE NULL
-                    END AS height
-            FROM osm_relief_point
-            WHERE feature IN ('peak', 'volcano') 
-          ) t
-          ORDER BY height DESC NULLS LAST
-        ) AS relief_points
-    properties:
-      minzoom: 12
-
-  - id: mountain-passes
-    geometry: point
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (
-          WITH 
-          eps AS (SELECT 0.001 eps)
-          SELECT 
-            geometry
-            ,"name" AS original_name
-            ,rtsa_scale
+        (SELECT 
+            feature
+            ,geometry
+            ,angle
+            ,scale
             ,elevation
-            ,CONCAT(
-                  name
-                  ,CASE WHEN name IS NOT NULL AND (elevation IS NOT NULL OR rtsa_scale IS NOT NULL) THEN E'\n' ELSE NULL END
-                  ,CASE WHEN elevation IS NOT NULL OR rtsa_scale IS NOT NULL THEN 
-                    CONCAT(
-                      REPLACE(ROUND(elevation)::TEXT, '-', U&'\2212')
-                      ,CASE WHEN elevation IS NOT NULL AND rtsa_scale IS NOT NULL THEN CONCAT(',', U&'\00A0') ELSE '' END
-                      ,rtsa_scale
-                    ) 
-                   ELSE NULL END
-              ) AS name
-              ,angle
           FROM 
            (
-            SELECT 
-              geometry
+            SELECT
+              CASE WHEN feature = 'saddle' OR mountain_pass=TRUE THEN 'pass' ELSE feature END AS feature
+              ,geometry
               ,CASE
                 WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN (ele)::NUMERIC
                   ELSE NULL
                END elevation
-              ,name
-              ,angle
-              ,rtsa_scale
+              ,CASE WHEN rtsa_scale ~ '[нН][\/\\ ]*[кК]' THEN CONCAT('н',U&'\2044','к') ELSE rtsa_scale END AS scale
+              ,COALESCE(angle, 0) angle
             FROM 
               osm_relief_point P  
-            where
-              feature = 'saddle'
-              OR mountain_pass=true
           ) psss
-        ) AS passes
+          ORDER BY 
+            CASE 
+              WHEN feature='peak' AND ROW_NUMBER() OVER(PARTITION BY feature ORDER BY elevation DESC NULLS LAST) <= 5 THEN 'я' 
+              ELSE CASE 
+                WHEN scale ~ '^н' THEN '0' 
+                ELSE scale 
+              END 
+            END DESC
+            ,elevation DESC NULLS LAST
+        ) AS relief_points
     properties:
-      minzoom: 12
+      minzoom: 11
 
   - id: other-points
     class: points
@@ -358,14 +321,80 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT 
-          CASE WHEN shelter_type='basic_hut' THEN 'basic_hut'
-            ELSE feature
+        (WITH orders(feature, ord) AS (VALUES
+          ('alpine_hut', 1),
+          ('wilderness_hut', 2),
+          ('basic_hut', 3),
+          ('shelter', 4),
+          ('camp_site', 5)
+        )
+        SELECT 
+          CASE 
+            WHEN shelter_type='basic_hut' THEN 'basic_hut'
+            ELSE P.feature
           END feature
           ,geometry
-          ,name
+          ,name          
         FROM
           public.osm_other_point P
+          LEFT JOIN orders O ON O.feature = CASE WHEN shelter_type='basic_hut' THEN 'basic_hut' ELSE P.feature END
+        ORDER BY ord
         ) AS other_points
     properties:
       minzoom: 12
+
+  - id: relief-points-text
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (
+          SELECT 
+            feature
+            ,geometry
+            ,angle
+            ,CONCAT(
+              "name"
+              ,CASE WHEN scale <> '' THEN U&'\00A0' END
+              ,scale
+            ) AS short_name
+            ,CONCAT(
+                  name
+                  ,CASE WHEN name <> '' AND (elevation IS NOT NULL OR scale <> '' ) THEN E'\n' ELSE NULL END
+                  ,CASE WHEN elevation IS NOT NULL OR scale <> '' THEN 
+                    CONCAT(
+                      REPLACE(elevation::TEXT, '-', U&'\2212')
+                      ,CASE WHEN elevation IS NOT NULL AND scale <> '' THEN CONCAT(',', U&'\00A0') ELSE '' END
+                      ,scale
+                    ) 
+                   ELSE NULL END
+              ) AS name
+          FROM 
+           (
+            SELECT
+              CASE WHEN feature = 'saddle' OR mountain_pass=TRUE THEN 'pass' ELSE feature END AS feature
+              ,geometry
+              ,CASE
+                WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN (ele)::NUMERIC
+                  ELSE NULL
+               END elevation
+              ,name
+              ,CASE WHEN rtsa_scale ~ '[нН][\/\\ ]*[кК]' THEN CONCAT('н',U&'\2044','к') ELSE rtsa_scale END AS scale
+              ,COALESCE(angle, 0) angle
+            FROM 
+              osm_relief_point P  
+          ) psss
+          ORDER BY 
+            CASE 
+              WHEN feature='peak' AND ROW_NUMBER() OVER(PARTITION BY feature ORDER BY elevation DESC NULLS LAST) <= 5 THEN 'я' 
+              ELSE CASE 
+                WHEN scale ~ '^н' THEN '0' 
+                ELSE scale 
+              END 
+            END DESC
+            ,elevation DESC NULLS LAST
+        ) AS passes_txt
+    properties:
+      minzoom: 11
+      clear-label-cache: on
