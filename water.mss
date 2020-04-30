@@ -2,7 +2,7 @@
 @waterway-width-3: 1.0;
 @waterway-width-2: 1.5;
 @waterway-width-1: 2.0;
-
+@water-border-color-zz: @water-border-color-lz;
 /*
 @water-border-color-zz: #AA0000;
 #waterways-gen{
@@ -26,6 +26,33 @@
 		[len > 500]{ line-width: 1.2; }
 		[len > 1000]{ line-width: 1.6; }
 	}
+}
+*/
+/*
+#waterways{
+
+	[zoom <= 5][len > 1000]{
+	    line-color: @water-border-color-zz;
+		line-width: @waterway-width-4;
+		[len > 2000]{ line-width: @waterway-width-3; }
+		[len > 3000]{ line-width: @waterway-width-2; }
+	}
+	[zoom = 6][len > 500]{
+	    line-color: @water-border-color-zz;
+		[len > 500]{ line-width: @waterway-width-4; }
+		[len > 1000]{ line-width: @waterway-width-3; }
+		[len > 2000]{ line-width: @waterway-width-2; }
+		[len > 3000]{ line-width: @waterway-width-1; }
+		
+	}
+	[zoom = 7][len > 100]{
+	    line-color: @water-border-color-zz;
+		[len > 100]{ line-width: @waterway-width-4; }
+		[len > 500]{ line-width: @waterway-width-3; }
+		[len > 1000]{ line-width: @waterway-width-2; }
+		[len > 2000]{ line-width: @waterway-width-1; }
+	}
+
 }
 */
 

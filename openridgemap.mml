@@ -95,15 +95,16 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT 
+        (SELECT
           feature
           ,L.geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
-          ,COALESCE(R.len, L.len) AS len
+          ,COALESCE(R.len, JM.len, L.len) AS len
         FROM
           public.osm_waterway L
           LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
           LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
+          LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
         ) AS waterways
     properties:
       minzoom: 8
