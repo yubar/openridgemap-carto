@@ -59,6 +59,10 @@
         line-width: 2.6;
         line-color: @casing;
       }
+      [feature = 'footway'],[feature = 'path']{
+        line-width: 1.6;
+        line-color: rgba(255, 255, 255, 0.4);
+      }
     }
   }
 
@@ -115,8 +119,8 @@
 
     [feature = 'footway'],[feature = 'path']{
       line/line-color: @footway;
-      line/line-dasharray: 2,2;
-      line/line-width: 1.2;
+      line/line-dasharray: 2,3;
+      line/line-width: 1;
     }
 
   }
