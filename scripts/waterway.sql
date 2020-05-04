@@ -79,19 +79,19 @@ WHERE N = 1 AND N2 = 1;
 
 
 
-CREATE TABLE IF NOT EXISTS osm_waterway_join_members(
+CREATE TABLE IF NOT EXISTS osm_waterway_join_member(
 	id serial
 	,"name" varchar
 	,len float
 	,osm_id bigint
 );
 
-TRUNCATE TABLE osm_waterway_join_members;
+TRUNCATE TABLE osm_waterway_join_member;
 
-INSERT INTO osm_waterway_join_members("name", len, osm_id)
+INSERT INTO osm_waterway_join_member("name", len, osm_id)
 SELECT "name", len, UNNEST(ids) FROM osm_waterway_join;
 
-CREATE INDEX IF NOT EXISTS IX_osm_waterway_join_members_osm_id ON osm_waterway_join_members(osm_id);
+CREATE INDEX IF NOT EXISTS IX_osm_waterway_join_member_osm_id ON osm_waterway_join_member(osm_id);
 
 DROP TABLE tmp_waterways;
 
