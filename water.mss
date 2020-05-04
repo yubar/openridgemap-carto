@@ -62,8 +62,7 @@
   ,[feature = 'canal']{
   	[zoom >= 8]{
 
-		/* line-width: 0; */
-		line: none;
+		line-width: 0; 
 	    line-color: @water-border-color;
 		line-cap: butt;
 		line-join: round;
