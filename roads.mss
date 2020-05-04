@@ -44,20 +44,20 @@
       ,[feature = 'primary'],[feature = 'secondary'] {
         line-width: 2.6;
         line-color: @casing;
+        line-cap: butt;
+        line-join: round;
       }
     }
     [zoom >= 10]{
       [feature = 'motorway'],[feature = 'trunk']
       ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
         line-width: 3.5;
-        line-color: @casing;
         [feature = 'tertiary'] {line-width: 3.0;}
       }
     }
     [zoom >= 12] {
       [feature = 'road'],[feature = 'unclassified'] {
         line-width: 2.6;
-        line-color: @casing;
       }
       [feature = 'footway'],[feature = 'path']{
         line-width: 1.6;
@@ -65,63 +65,77 @@
       }
     }
   }
+  ::fill{
 
-  [feature = 'motorway'] {line-color: @motorway;}
-  [feature = 'trunk'] {line-color: @trunk;}
-  [feature = 'primary'] {line-color: @primary;}
+    line-width: 0;  
+    
 
-  [zoom >= 8]{
-    [feature = 'motorway'],[feature = 'trunk']
-    ,[feature = 'primary'],[feature = 'secondary'] {
-      line-width: 2;   
-      [feature = 'secondary'] {line-color: @secondary;}
-    }
-  }
+    [feature = 'motorway'] {line-color: @motorway;}
+    [feature = 'trunk'] {line-color: @trunk;}
+    [feature = 'primary'] {line-color: @primary;}
 
-  [zoom >= 10]{
-    [feature = 'motorway'],[feature = 'trunk']
-    ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
-      line-width: 2.5;
-      [feature = 'tertiary'] {line-color: @tertiary;}
-    }
-  }
-  [zoom >= 12] {
-    [feature = 'road'],[feature = 'unclassified'] {
-      line-width: 2;
-      line-color: @road;
-    }
-    [feature = 'track'],[feature = 'cycleway'],[feature = 'bridleway']{
-      line-color: @track;
-      line-opacity: 0.8;
-      line-width: 1.5;
-
-      [feature = 'cycleway'],[feature = 'bridleway'] { 
-        line-width: 1.2;
-        line-dasharray: 6,3,2,3;
-      }
-      
-      [tracktype = 'grade1'] {
-        line-dasharray: 100,0;
-      }
-      [tracktype = 'grade2'] {
-        line-dasharray: 10,2;
-      }
-      [tracktype = 'grade3'] {
-        line-dasharray: 8,4;
-      }
-      [tracktype = 'grade4'] {
-        line-dasharray: 6,3;
-      }
-      [tracktype = 'grade5'] {
-        line-dasharray: 3,2;
+    [zoom >= 8]{
+      [feature = 'motorway'],[feature = 'trunk']
+      ,[feature = 'primary'],[feature = 'secondary'] {
+        line-cap: butt;
+        line-join: round;  
+        line-width: 2;
+        [feature = 'secondary'] {line-color: @secondary;}
       }
     }
 
-    [feature = 'footway'],[feature = 'path']{
-      line/line-color: @footway;
-      line/line-dasharray: 2,3;
-      line/line-width: 1;
+    [zoom >= 10]{
+      [feature = 'motorway'],[feature = 'trunk']
+      ,[feature = 'primary'],[feature = 'secondary'],[feature = 'tertiary'] {
+        line-cap: butt;
+        line-join: round; 
+        line-width: 2.5;
+        [feature = 'tertiary'] {line-color: @tertiary;}
+      }
     }
+    [zoom >= 12] {
+      [feature = 'road'],[feature = 'unclassified'] {
+        line-cap: butt;
+        line-join: round; 
+        line-width: 2;
+        line-color: @road;
+      }
+      [feature = 'track'],[feature = 'cycleway'],[feature = 'bridleway']{
+        line-cap: butt;
+        line-join: round; 
+        line-color: @track;
+        line-opacity: 0.8;
+        line-width: 1.5;
 
+        [feature = 'cycleway'],[feature = 'bridleway'] { 
+          line-width: 1.2;
+          line-dasharray: 6,3,2,3;
+        }
+        
+        [tracktype = 'grade1'] {
+          line-dasharray: 100,0;
+        }
+        [tracktype = 'grade2'] {
+          line-dasharray: 10,2;
+        }
+        [tracktype = 'grade3'] {
+          line-dasharray: 8,4;
+        }
+        [tracktype = 'grade4'] {
+          line-dasharray: 6,3;
+        }
+        [tracktype = 'grade5'] {
+          line-dasharray: 3,2;
+        }
+      }
+
+      [feature = 'footway'],[feature = 'path']{
+        line-cap: butt;
+        line-join: round; 
+        line/line-color: @footway;
+        line/line-dasharray: 2,3;
+        line/line-width: 1;
+      }
+    }
   }
 }

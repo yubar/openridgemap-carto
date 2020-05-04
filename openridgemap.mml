@@ -105,6 +105,9 @@ Layer:
           LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
           LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
           LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
+        WHERE 
+          COALESCE(R.len, JM.len, L.len) > 40*SQRT(!pixel_width!::real*!pixel_height!::real)/1000
+          OR !scale_denominator!::real < 150000
         ) AS waterways
     properties:
       minzoom: 8
@@ -136,6 +139,8 @@ Layer:
         (SELECT 
           geometry 
         FROM public.osm_boundary
+        WHERE
+          ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
         ) AS boundaries
     properties:
   #     minzoom: 5
@@ -156,10 +161,15 @@ Layer:
           LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
           LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
         WHERE
-          feature = 'ridge'
-          OR (
-            feature IN ('cliff', 'arete')
-            AND RM.id IS NOT NULL
+          (
+            COALESCE(R.len, L.len)*1000 > 50*SQRT(!pixel_width!::real*!pixel_height!::real)
+            OR !scale_denominator!::real < 75000
+          ) AND (
+            feature = 'ridge'
+            OR (
+              feature IN ('cliff', 'arete')
+              AND RM.id IS NOT NULL
+            )
           )
         ) AS ridges
     properties:
@@ -200,10 +210,13 @@ Layer:
           ,surface
         FROM
           public.osm_highway
-          WHERE feature IN ('motorway', 'trunk', 'primary')
+          WHERE 
+            feature IN ('motorway', 'trunk', 'primary')
+            AND ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
         ) AS highways
     properties:
       minzoom: 4
+      maxzoom: 7
 
   - id: highways
     geometry: linestring
@@ -219,6 +232,8 @@ Layer:
           ,tracktype
         FROM
           public.osm_highway
+        WHERE 
+            ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
         ) AS highways
     properties:
       minzoom: 8
