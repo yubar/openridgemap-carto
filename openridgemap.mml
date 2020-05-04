@@ -48,7 +48,7 @@ Layer:
     geometry: polygon
     <<: *extents
     Datasource:
-      file: data/simplified-water-polygons-split-3857/simplified_water_polygons.shp
+      file: ../../data/shape/simplified-water-polygons-split-3857/simplified_water_polygons.shp
       type: shape
     properties:
      maxzoom: 6
@@ -57,7 +57,7 @@ Layer:
     geometry: polygon
     <<: *extents
     Datasource:
-      file: data/water-polygons-split-3857/water_polygons.shp
+      file: ../../data/shape/water-polygons-split-3857/water_polygons.shp
       type: shape
     properties:
       minzoom: 7
@@ -66,7 +66,7 @@ Layer:
     geometry: linestring
     <<: *extents84
     Datasource:
-      file: data/ne_110m_admin_0_boundary_lines_land/ne_110m_admin_0_boundary_lines_land.shp
+      file: ../../data/shape/ne_110m_admin_0_boundary_lines_land/ne_110m_admin_0_boundary_lines_land.shp
       type: shape
     properties:
       minzoom: 1
