@@ -1,0 +1,164 @@
+tables:
+  relief_point:
+    type: point
+    mapping:
+      natural:
+      - peak
+      - volcano
+      - saddle
+      mountain_pass: ['yes']
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {key: name, name: name, type: string}
+    - {key: ele, name: ele, type: string}
+    - {key: natural, name: feature, type: string}
+    - {key: mountain_pass, name: mountain_pass, type: bool}
+    - {key: rtsa_scale, name: rtsa_scale, type: string}
+
+  water_point:
+    type: point
+    mapping:
+      natural: [spring, 'hot_spring']
+      waterway: [waterfall]
+      "whitewater": [rapid]
+      "whitewater:rapid_name": [__any__]
+      "whitewater:rapid_grade": [__any__]
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {key: name, name: name, type: string}
+    - {key: whitewater, name: whitewater, type: string}
+    - {key: "whitewater:rapid_name", name: rapid_name, type: string}
+    - {key: "whitewater:rapid_grade", name: rapid_grade, type: string}
+    - {key: natural, name: natural, type: string}
+    - {key: waterway, name: waterway, type: string}
+    - {key: height, name: height, type: string}
+
+  other_point:
+    type: point
+    mapping:
+      tourism: [camp_site, alpine_hut, wilderness_hut]
+      amenity: [shelter]
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: feature, type: mapping_value}
+    - {key: name, name: name, type: string}
+    - {key: shelter_type, name: shelter_type, type: string}
+
+
+  relief_line:
+    type: linestring
+    mapping:
+      natural:
+      - ridge
+      - cliff
+      - arete
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: feature, type: mapping_value}
+    - {key: name, name: name, type: string}
+
+  waterway:
+    type: linestring
+    mapping:
+      waterway:
+      - river
+      - stream
+      - drain
+      - ditch
+      - canal
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: feature, type: mapping_value}
+    - {key: name, name: name, type: string}
+    - {key: tunnel, name: tunnel, type: string}
+    - {key: seasonal, name: seasonal, type: string}
+    - {key: intermittent, name: intermittent, type: string}
+
+  highway:
+    type: linestring
+    mapping:
+      highway: [__any__]
+    filters:
+      reject:
+        highway: [residential, service, living_street, construction, proposed, pedestrian]
+      reject_regexp:
+        highway: '_link$'
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: feature, type: mapping_value}
+    - {key: bridge, name: bridge, type: string}
+    - {key: highway, name: highway, type: string}
+    - {key: tracktype, name: tracktype, type: string}
+    - {key: surface, name: surface, type: string}
+
+  water_poly:
+    type: polygon
+    mapping:
+      natural:
+      - water
+      - glacier
+      landuse:
+      - reservoir
+      - basin
+      waterway:
+      - dock
+      - riverbank
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: feature, type: mapping_value}
+    - {key: name, name: name, type: string}
+    - {key: seasonal, name: seasonal, type: string}
+    - {key: intermittent, name: intermittent, type: string}
+    - {name: area, type: area}
+
+  ridge_rel:
+    type: relation
+    columns:
+    - {name: osm_id, type: id}
+    - {key: name, name: name, type: string}
+    relation_types: [multilinestring]
+    mapping:
+      natural: [ridge]
+
+  ridge_rel_member:
+    type: relation_member
+    columns:
+    - {name: osm_id, type: id}
+    - {name: member, type: member_id}
+    relation_types: [multilinestring]
+    mapping:
+      natural: [ridge]
+
+  waterway_rel:
+    type: relation
+    columns:
+    - {name: osm_id, type: id}
+    - {key: name, name: name, type: string}
+    relation_types: [waterway]
+    mapping:
+      waterway: [river]
+
+  waterway_rel_member:
+    type: relation_member
+    columns:
+    - {name: osm_id, type: id}
+    - {name: member, type: member_id}
+    relation_types: [waterway]
+    mapping:
+      waterway: [river]
+
+  boundary:
+    type: linestring
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    relation_types: [boundary]
+    mapping:
+      admin_level: ["2"]

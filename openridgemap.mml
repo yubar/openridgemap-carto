@@ -30,184 +30,215 @@ _parts:
     srs: "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
   osm2pgsql: &osm2pgsql
     type: "postgis"
-    dbname: "gis"
+    dbname: "openridgemap"
     key_field: ""
-    geometry_field: "way"
+    geometry_field: "geometry"
     extent: "-20037508,-20037508,20037508,20037508"
 
 Stylesheet:
   - fonts.mss
+  - styles.mss
+  - shapefiles.mss
   - water.mss
-  - my.mss
+  - ridges.mss
   - roads.mss
+  - points.mss
 Layer:
-  - id: water-lines-casing
-    geometry: linestring
+  - id: ocean-lz
+    geometry: polygon
     <<: *extents
     Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            waterway,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') THEN 'yes' ELSE 'no' END AS int_tunnel
-          FROM planet_osm_line
-          WHERE waterway IN ('stream', 'drain', 'ditch')
-        ) AS water_lines_casing
+      file: ../../data/shape/simplified-water-polygons-split-3857/simplified_water_polygons.shp
+      type: shape
     properties:
-      minzoom: 13
-  - id: water-lines-low-zoom
+     maxzoom: 6
+
+  - id: ocean
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      file: ../../data/shape/water-polygons-split-3857/water_polygons.shp
+      type: shape
+    properties:
+      minzoom: 7
+
+  - id: necountries
+    geometry: linestring
+    <<: *extents84
+    Datasource:
+      file: ../../data/shape/ne_110m_admin_0_boundary_lines_land/ne_110m_admin_0_boundary_lines_land.shp
+      type: shape
+    properties:
+      minzoom: 1
+      maxzoom: 4
+
+  # - id: waterways-gen
+  #   geometry: linestring
+  #   <<: *extents
+  #   Datasource:
+  #     <<: *osm2pgsql
+  #     table: |-
+  #       (SELECT 
+  #         feature
+  #         ,"name"
+  #         ,L.geometry
+  #         ,len
+  #       FROM
+  #         public.osm_waterway_gen L
+  #       ) AS waterways_gen
+  #   properties:
+  #     maxzoom: 10
+
+  - id: waterways
     geometry: linestring
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            way,
-            waterway,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent
-          FROM planet_osm_line
-          WHERE waterway = 'river'
-        ) AS water_lines_low_zoom
+          feature
+          ,L.geometry
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+          ,COALESCE(R.len, JM.len, L.len) AS len
+        FROM
+          public.osm_waterway L
+          LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
+          LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
+        WHERE 
+          COALESCE(R.len, JM.len, L.len) > 40*SQRT(!pixel_width!::real*!pixel_height!::real)/1000
+          OR !scale_denominator!::real < 150000
+        ) AS waterways
     properties:
       minzoom: 8
-      maxzoom: 11
 
-  - id: water-lines
-    class: water-lines
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            waterway,
-            name,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') THEN 'yes' ELSE 'no' END AS int_tunnel,
-            'no' AS bridge
-          FROM planet_osm_line
-          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'wadi')
-            AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
-          ORDER BY COALESCE(layer,0)
-        ) AS water_lines
-    properties:
-      minzoom: 12
-
-  - id: water-areas
+  - id: waterareas
     geometry: polygon
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            way,
-            "natural",
-            waterway,
-            landuse,
-            name,
-            way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent
-          FROM planet_osm_polygon
-          WHERE
-            (waterway IN ('dock', 'riverbank')
-              OR landuse IN ('reservoir', 'basin')
-              OR "natural" IN ('water', 'glacier'))
-            AND building IS NULL
-            AND way_area > 1*!pixel_width!::real*!pixel_height!::real
-          ORDER BY COALESCE(layer,0), way_area DESC
-        ) AS water_areas
-    properties:
-      minzoom: 0
+          feature
+          ,name
+          ,geometry
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+          ,area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS areapx
+        FROM
+          public.osm_water_poly
+        WHERE
+          area > 1*!pixel_width!::real*!pixel_height!::real
+        ) AS waterareas
 
-  - id: mountain-ridges
+  - id: boundaries
+    geometry: polygon
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          geometry 
+        FROM public.osm_boundary
+        WHERE
+          ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
+        ) AS boundaries
+    properties:
+  #     minzoom: 5
+
+  - id: ridges
     geometry: linestring
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (
-          SELECT
-            'natural_ridge' AS feature
-            ,L.name
-            ,L.way
-            ,COALESCE(R.len, ST_Length(ST_AsText(ST_Transform(way,26915)))/1000) len
-          FROM 
-            planet_osm_line L
-            LEFT JOIN public.planet_osm_rels R 
-              ON R.tags::hstore->'natural' = 'ridge'
-              AND L.osm_id = ANY (R.parts)
-          WHERE
-            "natural" = 'ridge'
+        (SELECT 
+          'ridge' AS feature
+          ,L.name
+          ,L.geometry
+          ,COALESCE(R.len, L.len) AS len
+        FROM
+          public.osm_relief_line L
+          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
+        WHERE
+          (
+            COALESCE(R.len, L.len)*1000 > 50*SQRT(!pixel_width!::real*!pixel_height!::real)
+            OR !scale_denominator!::real < 75000
+          ) AND (
+            feature = 'ridge'
             OR (
-              "natural" IN ('cliff', 'arete')
-              AND R.id IS NOT NULL
+              feature IN ('cliff', 'arete')
+              AND RM.id IS NOT NULL
             )
+          )
         ) AS ridges
-  
-  - id: roads-casing
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-          way
-          ,'highway_' || highway AS feature
-          ,tracktype
-        FROM planet_osm_line
-        WHERE highway IS NOT NULL
-        ) AS roads
     properties:
-      minzoom: 12
+      minzoom: 11
 
-  - id: roads-fill
+  - id: ridge-names
     geometry: linestring
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
         (SELECT
-          way
-          ,'highway_' || highway AS feature
-          ,tracktype
-        FROM planet_osm_line
-        WHERE highway IS NOT NULL
-        ) AS roads
-    properties:
-      minzoom: 12
-      
-  - id: mountain-ridge-names
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (
-          SELECT
-            'natural_ridge' AS feature
-            ,COALESCE(L.name, R.tags::hstore->'name') "name"
-            ,ST_ChaikinSmoothing(ST_Simplify(L.way, 500), 4, true) way
-          FROM 
-              planet_osm_line L
-              LEFT JOIN public.planet_osm_rels R 
-                ON R.tags::hstore->'natural' = 'ridge'
-                AND L.osm_id = ANY (R.parts)
-          WHERE
-            "natural" = 'ridge'
+          'ridge' AS feature
+          ,COALESCE(NULLIF(L.name,''), NULLIF(R.name,'')) "name"
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+          ,COALESCE(R.len, L.len) AS len
+        FROM 
+          public.osm_relief_line L
+          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
+        WHERE
+          L."name" <> ''
+          OR R."name" <>''
         ) AS ridgenames
+    properties:
+      minzoom: 9
 
-  - id: amenity-points
+  - id: highways-lowzoom
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+        FROM
+          public.osm_highway
+          WHERE 
+            feature IN ('motorway', 'trunk', 'primary')
+            AND ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
+        ) AS highways
+    properties:
+      minzoom: 4
+      maxzoom: 7
+
+  - id: highways
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,geometry
+          ,bridge
+          ,surface
+          ,tracktype
+        FROM
+          public.osm_highway
+        WHERE 
+            ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
+        ) AS highways
+    properties:
+      minzoom: 8
+
+  - id: water-points
     class: points
     geometry: point
     <<: *extents
@@ -215,215 +246,171 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-          way
-          ,CONCAT(
-              name
-              ,CASE WHEN name IS NOT NULL AND height IS NOT NULL THEN E'\n' ELSE NULL END
-              ,CASE WHEN height IS NOT NULL THEN CONCAT(ROUND(height)::TEXT, U&'\00A0', 'm') ELSE NULL END
-            ) AS name
-            ,feature
-            ,height
-        FROM ( 
-          SELECT
-              way,
-              name,
-              COALESCE(
-                'natural_' || CASE WHEN "natural" IN ('peak', 'volcano', 'spring', 'cave_entrance') THEN "natural" ELSE NULL END,
-                'waterway_' || CASE WHEN "waterway" IN ('waterfall') THEN waterway ELSE NULL END,
-                'tourism_' || CASE WHEN "tourism" IN ('camp_site') THEN tourism ELSE NULL END
-              ) AS feature,
+          CASE
+            WHEN waterway <> '' THEN waterway
+            WHEN whitewater = 'rapid' OR rapid_name<>'' OR rapid_grade<>'' THEN 'rapid'
+            WHEN "natural" <> '' THEN "natural"
+          END AS feature
+          ,CASE 
+            WHEN waterway <> '' THEN CONCAT(
+              "name"
+              ,CASE WHEN "name" <> '' AND height <> '' THEN ', ' END
+              ,CASE WHEN height <> ''THEN CONCAT(height, 'м') END
               
-              CASE
-                WHEN "natural" IN ('peak', 'volcano') THEN
-                  CASE
-                    WHEN tags->'ele' ~ '^-?\d{1,4}(\.\d+)?$' THEN (tags->'ele')::NUMERIC
-                    ELSE NULL
-                  END
-                WHEN "waterway" IN ('waterfall') THEN
-                  CASE
-                    WHEN tags->'height' ~ '^\d{1,3}(\.\d+)?( m)?$' THEN (SUBSTRING(tags->'height', '^(\d{1,3}(\.\d+)?)( m)?$'))::NUMERIC
-                    ELSE NULL
-                  END
-                ELSE NULL
-              END AS height
-            FROM planet_osm_point
-            WHERE 
-              "natural" IN ('peak', 'volcano')
-              OR waterway IN ('waterfall')
-              OR tourism IN ('camp_site')
-        ) t
-        ORDER BY height DESC NULLS LAST
-          ) AS amenity_points
+            )
+            WHEN "natural" <> '' THEN "name"
+            ELSE CONCAT(
+              rapid_name
+              ,CASE WHEN rapid_name <> '' AND rapid_grade <> '' THEN ' ' ELSE NULL END
+              ,CASE WHEN rapid_grade <> '' THEN CONCAT(rapid_grade, ' к.с.') ELSE NULL END
+            )
+          END AS "name"
+          ,height
+          ,geometry
+          ,angle
+        FROM public.osm_water_point
+        ) AS water_points
     properties:
-      minzoom: 10
+      minzoom: 12
 
-  - id: water-lines-text
+  - id: waterway-text
     geometry: linestring
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
-            way,
-            waterway,
-            lock,
-            name,
-            tags-> 'lock_name' AS lock_name,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') THEN 'yes' ELSE 'no' END AS int_tunnel
-          FROM planet_osm_line
-          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'wadi')
-            AND (tunnel IS NULL or tunnel != 'culvert')
-            AND name IS NOT NULL
-          ORDER BY COALESCE(layer,0)
-        ) AS water_lines_text
+        (SELECT 
+          feature
+          ,L.name
+          ,L.geometry
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+        FROM
+          public.osm_waterway L
+        ) AS waterways
     properties:
       minzoom: 10
 
-  - id: whitewater-rapids
+  - id: relief-points
+    class: points
     geometry: point
     <<: *extents
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (
-          WITH 
-            eps AS (SELECT 0.001 eps)
-          SELECT
-            way
-            ,CONCAT(
-              CASE WHEN tags->'whitewater:rapid_name' IS NOT NULL THEN 'Пор. ' ELSE NULL END
-              ,tags->'whitewater:rapid_name'
-              ,CASE WHEN tags->'whitewater:rapid_name' IS NOT NULL AND tags->'whitewater:rapid_grade' IS NOT NULL THEN ' ' ELSE NULL END
-              ,CASE WHEN tags->'whitewater:rapid_grade' IS NOT NULL THEN CONCAT(tags->'whitewater:rapid_grade', ' к.с.') ELSE NULL END
-            ) AS name
-            , (
-              SELECT 
-                degrees(ST_Azimuth(
-                  ST_StartPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)), 
-                  ST_EndPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)))
-                )-180
-              FROM planet_osm_line L, eps
-              WHERE 
-                L.waterway IS NOT NULL 
-                AND ST_DWithin(P.way, L.way, 0)
-              LIMIT 1
-            ) angle
-          FROM planet_osm_point P
-          WHERE 
-              tags->'whitewater:rapid' IS NOT NULL
-            OR tags->'whitewater:rapid_name' IS NOT NULL 
-            OR tags->'whitewater:rapid_grade' IS NOT NULL 
-        ) AS rapids
-
-  - id: text-poly
-    class: text
-    geometry: polygon
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            way_area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS way_pixels,
-            COALESCE(
-              'landuse_' || CASE WHEN landuse IN ('reservoir', 'basin') THEN landuse ELSE NULL END,
-                 
-              'natural_' || CASE WHEN "natural" IN ('wood', 'water', 'mud', 'wetland', 'marsh', 'bay', 'spring', 'scree', 'shingle', 'bare_rock', 'sand', 'heath',
-                                                    'grassland', 'scrub', 'beach', 'shoal', 'reef', 'glacier') THEN "natural" ELSE NULL END,
-              'waterway_' || CASE WHEN waterway IN ('dam', 'dock') THEN waterway ELSE NULL END
-            ) AS feature,
-            CONCAT(
-                name,
-                CASE
-                  WHEN (tourism = 'alpine_hut' OR amenity = 'shelter') AND tags->'ele' ~ '^-?\d{1,4}(\.\d+)?$' THEN
-                    CONCAT(E'\n', REPLACE(ROUND((tags->'ele')::NUMERIC)::TEXT, '-', U&'\2212'), U&'\00A0', 'm')
-                  ELSE
-                    NULL
-                END
-            ) AS name,
-            CASE
-              WHEN "waterway" IN ('waterfall') THEN
-                CASE
-                  WHEN tags->'height' ~ '^\d{1,3}(\.\d+)?( m)?$' THEN (SUBSTRING(tags->'height', '^(\d{1,3}(\.\d+)?)( m)?$'))::NUMERIC
-                  ELSE NULL
-                END
-              ELSE NULL
-            END AS height,
-            ref,
-            way_area
-          FROM planet_osm_polygon
-          where (
-              "natural" IS NOT NULL
-              OR waterway IN ('dam', 'dock')
-              OR landuse IN ('reservoir', 'basin')
-            )
-            AND name IS NOT NULL
-          ORDER BY way_area DESC
-        ) AS text_poly
-    properties:
-      minzoom: 10
-
-  - id: mountain-passes
-    geometry: point
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (
-          WITH 
-          eps AS (SELECT 0.001 eps)
-          SELECT 
-            way
-            ,"name" AS original_name
-            ,rtsa_scale
+        (SELECT 
+            feature
+            ,geometry
+            ,angle
+            ,scale
             ,elevation
+          FROM 
+           (
+            SELECT
+              CASE WHEN feature = 'saddle' OR mountain_pass=TRUE THEN 'pass' ELSE feature END AS feature
+              ,geometry
+              ,CASE
+                WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN (ele)::NUMERIC
+                  ELSE NULL
+               END elevation
+              ,CASE WHEN rtsa_scale ~ '[нН][\/\\ ]*[кК]' THEN CONCAT('н',U&'\2044','к') ELSE rtsa_scale END AS scale
+              ,COALESCE(angle, 0) angle
+            FROM 
+              osm_relief_point P  
+          ) psss
+          ORDER BY 
+            CASE 
+              WHEN feature='peak' AND ROW_NUMBER() OVER(PARTITION BY feature ORDER BY elevation DESC NULLS LAST) <= 5 THEN 'я' 
+              ELSE CASE 
+                WHEN scale ~ '^н' THEN '0' 
+                ELSE scale 
+              END 
+            END DESC
+            ,elevation DESC NULLS LAST
+        ) AS relief_points
+    properties:
+      minzoom: 11
+
+  - id: other-points
+    class: points
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (WITH orders(feature, ord) AS (VALUES
+          ('alpine_hut', 1),
+          ('wilderness_hut', 2),
+          ('basic_hut', 3),
+          ('shelter', 4),
+          ('camp_site', 5)
+        )
+        SELECT 
+          CASE 
+            WHEN shelter_type='basic_hut' THEN 'basic_hut'
+            ELSE P.feature
+          END feature
+          ,geometry
+          ,name          
+        FROM
+          public.osm_other_point P
+          LEFT JOIN orders O ON O.feature = CASE WHEN shelter_type='basic_hut' THEN 'basic_hut' ELSE P.feature END
+        ORDER BY ord
+        ) AS other_points
+    properties:
+      minzoom: 12
+
+  - id: relief-points-text
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (
+          SELECT 
+            feature
+            ,geometry
+            ,angle
+            ,CONCAT(
+              "name"
+              ,CASE WHEN scale <> '' THEN U&'\00A0' END
+              ,scale
+            ) AS short_name
             ,CONCAT(
                   name
-                  ,CASE WHEN name IS NOT NULL AND (elevation IS NOT NULL OR rtsa_scale IS NOT NULL) THEN E'\n' ELSE NULL END
-                  ,CASE WHEN elevation IS NOT NULL OR rtsa_scale IS NOT NULL THEN 
+                  ,CASE WHEN name <> '' AND (elevation IS NOT NULL OR scale <> '' ) THEN E'\n' ELSE NULL END
+                  ,CASE WHEN elevation IS NOT NULL OR scale <> '' THEN 
                     CONCAT(
-                      REPLACE(ROUND(elevation)::TEXT, '-', U&'\2212')
-                      ,CASE WHEN elevation IS NOT NULL AND rtsa_scale IS NOT NULL THEN CONCAT(',', U&'\00A0') ELSE '' END
-                      ,rtsa_scale
+                      REPLACE(elevation::TEXT, '-', U&'\2212')
+                      ,CASE WHEN elevation IS NOT NULL AND scale <> '' THEN CONCAT(',', U&'\00A0') ELSE '' END
+                      ,scale
                     ) 
                    ELSE NULL END
               ) AS name
-              ,angle
           FROM 
            (
-            SELECT 
-              way
+            SELECT
+              CASE WHEN feature = 'saddle' OR mountain_pass=TRUE THEN 'pass' ELSE feature END AS feature
+              ,geometry
               ,CASE
-                  WHEN "natural" IN ('peak', 'volcano', 'saddle')
-                  OR tourism = 'alpine_hut' OR (tourism = 'information' AND tags->'information' = 'guidepost')
-                  OR amenity = 'shelter' THEN
-                    CASE
-                        WHEN tags->'ele' ~ '^-?\d{1,4}(\.\d+)?$' THEN (tags->'ele')::NUMERIC
-                          ELSE NULL
-                      END
+                WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN (ele)::NUMERIC
                   ELSE NULL
-                END elevation
-                ,name
-              ,(SELECT
-                degrees(ST_Azimuth(
-                  ST_StartPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)), 
-                  ST_EndPoint(ST_LineSubstring(L.way, ST_LineLocatePoint(L.way, P.way)*(1-eps), CASE WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) = 0 THEN eps WHEN ST_LineLocatePoint(L.way, P.way)*(1+eps) > 1 THEN 1 ELSE ST_LineLocatePoint(L.way, P.way)*(1+eps) END)))
-                )-180
-              from planet_osm_line L, eps
-              where
-                L."natural" = 'ridge'
-                and ST_DWithin(P.way, L.way, 0)
-              limit 1
-              ) as angle
-              ,tags::hstore->'rtsa_scale' rtsa_scale
+               END elevation
+              ,name
+              ,CASE WHEN rtsa_scale ~ '[нН][\/\\ ]*[кК]' THEN CONCAT('н',U&'\2044','к') ELSE rtsa_scale END AS scale
+              ,COALESCE(angle, 0) angle
             FROM 
-              planet_osm_point P  
-            where
-              P."natural" = 'saddle'
-              OR tags::hstore->'mountain_pass'='yes'
+              osm_relief_point P  
           ) psss
-        ) AS passes
-
+          ORDER BY 
+            CASE 
+              WHEN feature='peak' AND ROW_NUMBER() OVER(PARTITION BY feature ORDER BY elevation DESC NULLS LAST) <= 5 THEN 'я' 
+              ELSE CASE 
+                WHEN scale ~ '^н' THEN '0' 
+                ELSE scale 
+              END 
+            END DESC
+            ,elevation DESC NULLS LAST
+        ) AS passes_txt
+    properties:
+      minzoom: 11
+      clear-label-cache: on
