@@ -99,16 +99,16 @@
     marker-placement: interior;
     marker-clip: false;
     marker-line-color: #000;
-    marker-line-width: 0.7;
+    marker-line-width: 0.5;
     marker-transform: rotate([angle]);
-    marker-fill: #FFFFFF;
-    [scale='н/к']{marker-fill: #C9CFCE;}
-    [scale='1А'],[scale='1А*']{marker-fill: #54A951;}
-    [scale='1Б'],[scale='1Б*']{marker-fill: #1388E7;}
-    [scale='2А'],[scale='2А*']{marker-fill: #974EA2;}
-    [scale='2Б'],[scale='2Б*']{marker-fill: #FFFF33;}
-    [scale='3А'],[scale='3А*']{marker-fill: #FF8000;}
-    [scale='3Б'],[scale='3Б*']{marker-fill: #E6191D;}
+    marker-fill: #FFF;
+    [scale='н/к']{marker-fill: #DDD;}
+    [scale='1А'],[scale='1А*']{marker-fill: #17c638;}
+    [scale='1Б'],[scale='1Б*']{marker-fill: #28b3ff;}
+    [scale='2А'],[scale='2А*']{marker-fill: #e9eb00;}
+    [scale='2Б'],[scale='2Б*']{marker-fill: #ff8800;}
+    [scale='3А'],[scale='3А*']{marker-fill: #ff63f5;}
+    [scale='3Б'],[scale='3Б*']{marker-fill: #ff3c32;}
 
     [zoom >= 12] {
       marker-allow-overlap: true; 
