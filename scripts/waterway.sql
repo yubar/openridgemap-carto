@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS osm_waterway_join_member(
 	,"name" varchar
 	,len float
 	,osm_id bigint
+	,CONSTRAINT osm_waterway_join_member_pkey PRIMARY KEY (osm_id, id)
 );
 
 TRUNCATE TABLE osm_waterway_join_member;
@@ -91,7 +92,7 @@ TRUNCATE TABLE osm_waterway_join_member;
 INSERT INTO osm_waterway_join_member("name", len, osm_id)
 SELECT "name", len, UNNEST(ids) FROM osm_waterway_join;
 
-CREATE INDEX IF NOT EXISTS IX_osm_waterway_join_member_osm_id ON osm_waterway_join_member(osm_id);
+--CREATE INDEX IF NOT EXISTS IX_osm_waterway_join_member_osm_id ON osm_waterway_join_member(osm_id);
 
 DROP TABLE tmp_waterways;
 

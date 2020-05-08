@@ -43,6 +43,7 @@ Stylesheet:
   - ridges.mss
   - roads.mss
   - points.mss
+
 Layer:
   - id: ocean-lz
     geometry: polygon
@@ -72,22 +73,23 @@ Layer:
       minzoom: 1
       maxzoom: 4
 
-  # - id: waterways-gen
-  #   geometry: linestring
-  #   <<: *extents
-  #   Datasource:
-  #     <<: *osm2pgsql
-  #     table: |-
-  #       (SELECT 
-  #         feature
-  #         ,"name"
-  #         ,L.geometry
-  #         ,len
-  #       FROM
-  #         public.osm_waterway_gen L
-  #       ) AS waterways_gen
-  #   properties:
-  #     maxzoom: 10
+  - id: waterways-gen
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,"name"
+          ,L.geometry
+          ,len
+        FROM
+          public.osm_waterway_gen L
+        ) AS waterways_gen
+    properties:
+      minzoom: 1
+      maxzoom: 7
 
   - id: waterways
     geometry: linestring
@@ -129,6 +131,8 @@ Layer:
         WHERE
           area > 1*!pixel_width!::real*!pixel_height!::real
         ) AS waterareas
+    #properties:
+    #  minzoom: 4  
 
   - id: boundaries
     geometry: polygon
@@ -143,7 +147,7 @@ Layer:
           ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
         ) AS boundaries
     properties:
-  #     minzoom: 5
+       minzoom: 5
 
   - id: ridges
     geometry: linestring

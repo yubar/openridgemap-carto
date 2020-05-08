@@ -1,7 +1,7 @@
 @book-fonts:    "DejaVu Sans Book",
-                "Noto Sans Regular",
+                "Noto Sans Regular";
 
-                "Unifont Medium", "unifont Medium", "Unifont Upper Medium";
+                /*"Unifont Medium", "unifont Medium", "Unifont Upper Medium";*/
 
 @bold-fonts:    "DejaVu Sans Bold",
                 "Noto Sans Bold",

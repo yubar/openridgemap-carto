@@ -1,4 +1,5 @@
 @casing: #000000;
+@road-lz: #f55;
 @motorway: #CC4C02;
 @trunk: #FE9929;
 @primary: #FED98E;
@@ -9,30 +10,59 @@
 @footway: #970202;
 
 #highways-lowzoom {
-  ::casing {
+  [zoom <= 5] {
     [feature = 'motorway'],[feature = 'trunk'] {
-      line-color: @casing;
-      [zoom <= 5] {line-width: 1;}
-      [zoom > 5][zoom <= 8] {line-width: 2;}
-    }
-
-    [feature = 'primary'][zoom >= 6] {
-      line-color: @casing;
-      line-width: 2;
+      line-color: @road-lz;
+      line-width: 0.5;
     }
   }
 
-  [feature = 'motorway'],[feature = 'trunk'] {
-    [zoom <= 5] {line-width: 0.7;}
-    [zoom > 5][zoom <= 8] {line-width: 1.5;}
-  }
+  [zoom >= 6] {
+    [zoom = 6]{
+      [feature = 'primary']{
+        line-color: @road-lz;
+        line-width: 0.5;
+      }
+    }
+    ::casing {
+      [feature = 'motorway'],[feature = 'trunk']{
+        [zoom > 5]{
+          line-width: 1.5;
+          line-color: @casing;
+          line-cap: butt;
+          line-join: round;
+          line-clip: false;
+        }
+      }
+      [feature = 'primary'][zoom = 7] {
+        line-color: @casing;
+        line-width: 1.5;
+        line-cap: butt;
+        line-join: round;
+        line-clip: false;
+      }
+    }
+    ::fill{
+      [feature = 'motorway'],[feature = 'trunk'] {
+        [zoom > 5] {
+          line-width: 1.2;
+          line-cap: butt;
+          line-join: round;
+          line-clip: false;
+        }
+      }
 
-  [feature = 'motorway'] {line-color: @motorway;}
-  [feature = 'trunk'] {line-color: @trunk;}
+      [feature = 'motorway'] {line-color: @motorway;}
+      [feature = 'trunk'] {line-color: @trunk;}
 
-  [feature = 'primary'][zoom >= 6][zoom <= 8]{
-    line-width: 1.5;
-    line-color: @primary;
+      [feature = 'primary'][zoom = 7]{
+        line-width: 1.2;
+        line-color: @primary;
+        line-cap: butt;
+        line-join: round;
+        line-clip: false;
+      }
+    }
   }
 }
 

@@ -9,7 +9,7 @@
 
 
 @water-color: #aad3df;
-@water-color-lz: darken(@water-color, 15%);
+@water-color-lz: darken(@water-color, 30%);
 @water-border-color: darken(#0066cc, 15%);
 @water-border-color-lz: lighten(@water-border-color, 20%);
 @water-text: @water-border-color;

@@ -2,32 +2,55 @@
 @waterway-width-3: 1.0;
 @waterway-width-2: 1.5;
 @waterway-width-1: 2.0;
-@water-border-color-zz: @water-border-color-lz;
-/*
-@water-border-color-zz: #AA0000;
-#waterways-gen{
+@waterway-lz: @water-color-lz;
 
-	[zoom <= 4][len > 1000]{
-	    line-color: @water-border-color-zz;
-		line-width: 0.2;
-		[len > 2500]{ line-width: 0.4; }
+#waterways-gen{
+  ::fill{
+	[zoom <= 5][len >= 1000]{
+	    line-color: @waterway-lz;
+		line-width: 0.5;
+		line-cap: butt;
+		line-join: round;
+		line-clip: false;
+		[len >= 2500]{ line-width: 1; }
 	}
-	[zoom > 4][zoom <= 8][len > 100]{
-	    line-color: @water-border-color-zz;
-		line-width: 0.2;
-		[len > 250]{ line-width: 0.4; }
-		[len > 500]{ line-width: 0.8; }
-		[len > 1000]{ line-width: 1.2; }
+	[zoom = 5][len >= 500] {
+		line-color: @waterway-lz;
+		line-width: 0.5;
+		line-cap: butt;
+		line-join: round;
+		line-clip: false;
+		[len > 1000]{ line-width: 1; }
+		[len > 2500]{ line-width: 1.5; }
 	}
-	[zoom > 8]{
-	    line-color: @water-border-color-zz;
-		line-width: 0.4;
-		[len > 250]{ line-width: 0.8; }
-		[len > 500]{ line-width: 1.2; }
-		[len > 1000]{ line-width: 1.6; }
+	[zoom > 5][len >= 250]{
+	    line-color: @waterway-lz;
+		line-width: 0.5;
+		line-cap: butt;
+		line-join: round;
+		line-clip: false;
+		[len >= 500]{ line-width: 1; }
+		[len >= 1000]{ line-width: 1.5; }
 	}
+  }
+  ::label{
+  	[zoom <= 5][len >= 2500],
+  	[zoom = 5][len >= 1000],
+  	[zoom > 5][len >= 500]{
+	  	text-name: "[name]";
+		text-size: 11;
+		text-face-name: @oblique-fonts;
+		text-fill: @waterway-lz;
+		text-halo-radius: @water-halo-radius;
+		text-halo-fill: @water-halo-fill;
+		text-spacing: 250;
+		text-placement: line;
+		text-repeat-distance: @waterway-text-repeat-distance;
+		text-dy: 2;
+	}
+  }
 }
-*/
+
 /*
 #waterways{
 
@@ -135,10 +158,10 @@
 }
 
 #waterareas {
-    [zoom >= 0][zoom < 1][areapx >= 2],
-    [zoom >= 1][zoom < 2][areapx >= 8],
-    [zoom >= 2][zoom < 8][areapx >= 16],
-    [zoom >= 8][zoom < 14][areapx >= 32],
+    [zoom >= 0][zoom < 1][areapx >= 1],
+    [zoom >= 1][zoom < 2][areapx >= 4],
+    [zoom >= 2][zoom < 8][areapx >= 8],
+    [zoom >= 8][zoom < 14][areapx >= 16],
     [zoom >= 14]{
 
     	[feature = 'glacier'] {
