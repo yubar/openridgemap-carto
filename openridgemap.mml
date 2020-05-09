@@ -73,24 +73,6 @@ Layer:
       minzoom: 1
       maxzoom: 4
 
-  - id: waterways-gen
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT 
-          feature
-          ,"name"
-          ,L.geometry
-          ,len
-        FROM
-          public.osm_waterway_gen L
-        ) AS waterways_gen
-    properties:
-      minzoom: 1
-      maxzoom: 7
-
   - id: waterways
     geometry: linestring
     <<: *extents
@@ -122,7 +104,7 @@ Layer:
       table: |-
         (SELECT
           feature
-          ,name
+          ,COALESCE(NULLIF(name_ru,''), "name") "name"
           ,geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,area/NULLIF(!pixel_width!::real*!pixel_height!::real,0) AS areapx
@@ -133,6 +115,24 @@ Layer:
         ) AS waterareas
     #properties:
     #  minzoom: 4  
+
+  - id: waterways-gen
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,"name"
+          ,L.geometry
+          ,len
+        FROM
+          public.osm_waterway_gen L
+        ) AS waterways_gen
+    properties:
+      minzoom: 1
+      maxzoom: 7
 
   - id: boundaries
     geometry: polygon
@@ -157,7 +157,7 @@ Layer:
       table: |-
         (SELECT 
           'ridge' AS feature
-          ,L.name
+          ,COALESCE(NULLIF(R.name_ru,''), R."name", NULLIF(L.name_ru,''), L."name") "name"
           ,L.geometry
           ,COALESCE(R.len, L.len) AS len
         FROM
@@ -187,7 +187,7 @@ Layer:
       table: |-
         (SELECT
           'ridge' AS feature
-          ,COALESCE(NULLIF(L.name,''), NULLIF(R.name,'')) "name"
+          ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L.name,''), NULLIF(R.name_ru,''), NULLIF(R.name,'')) "name"
           ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
           ,COALESCE(R.len, L.len) AS len
         FROM 
@@ -242,6 +242,25 @@ Layer:
     properties:
       minzoom: 8
 
+  - id: railways
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          feature
+          ,usage
+          ,geometry
+          ,bridge
+        FROM
+          public.osm_railway
+        WHERE 
+            ST_Length(geometry) > 0.1*SQRT(!pixel_width!::real*!pixel_height!::real)
+        ) AS railways
+    properties:
+      minzoom: 4
+
   - id: water-points
     class: points
     geometry: point
@@ -257,12 +276,12 @@ Layer:
           END AS feature
           ,CASE 
             WHEN waterway <> '' THEN CONCAT(
-              "name"
+              COALESCE(NULLIF(name_ru,''), "name")
               ,CASE WHEN "name" <> '' AND height <> '' THEN ', ' END
               ,CASE WHEN height <> ''THEN CONCAT(height, 'м') END
               
             )
-            WHEN "natural" <> '' THEN "name"
+            WHEN "natural" <> '' THEN COALESCE(NULLIF(name_ru,''), "name") 
             ELSE CONCAT(
               rapid_name
               ,CASE WHEN rapid_name <> '' AND rapid_grade <> '' THEN ' ' ELSE NULL END
@@ -285,11 +304,11 @@ Layer:
       table: |-
         (SELECT 
           feature
-          ,L.name
-          ,L.geometry
+          ,COALESCE(NULLIF(name_ru,''), "name") "name"
+          ,geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
         FROM
-          public.osm_waterway L
+          public.osm_waterway
         ) AS waterways
     properties:
       minzoom: 10
@@ -354,7 +373,7 @@ Layer:
             ELSE P.feature
           END feature
           ,geometry
-          ,name          
+          ,COALESCE(NULLIF(name_ru,''), "name") "name"
         FROM
           public.osm_other_point P
           LEFT JOIN orders O ON O.feature = CASE WHEN shelter_type='basic_hut' THEN 'basic_hut' ELSE P.feature END
@@ -399,7 +418,7 @@ Layer:
                 WHEN ele ~ '^-?\d{1,4}(\.\d+)?$' THEN (ele)::NUMERIC
                   ELSE NULL
                END elevation
-              ,name
+              ,COALESCE(NULLIF(name_ru,''), "name") "name"
               ,CASE WHEN rtsa_scale ~ '[нН][\/\\ ]*[кК]' THEN CONCAT('н',U&'\2044','к') ELSE rtsa_scale END AS scale
               ,COALESCE(angle, 0) angle
             FROM 

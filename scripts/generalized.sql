@@ -15,7 +15,7 @@ INSERT INTO public.osm_waterway_gen(osm_id, feature, "name", geometry, len)
 SELECT 
    L.osm_id
   ,feature
-  ,L.name
+  ,COALESCE(NULLIF(L.name_ru,''), L."name")
   ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 2000), 4, true)
   ,COALESCE(R.len, L.len) AS len
 FROM

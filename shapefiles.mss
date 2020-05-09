@@ -1,11 +1,11 @@
 
 #ocean-lz {
   polygon-fill: @water-color;
-  [zoom <= 6]{ polygon-fill: @water-color-lz; }
+  [zoom <= 7]{ polygon-fill: @water-color-lz; }
 }
 
 #ocean {
-  [zoom > 6] { polygon-fill: @water-color; }
+  [zoom > 7] { polygon-fill: @water-color; }
 }
 
 #necountries {

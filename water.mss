@@ -2,11 +2,11 @@
 @waterway-width-3: 1.0;
 @waterway-width-2: 1.5;
 @waterway-width-1: 2.0;
-@waterway-lz: @water-color-lz;
+
 
 #waterways-gen{
   ::fill{
-	[zoom <= 5][len >= 1000]{
+	[zoom < 5][len >= 1000]{
 	    line-color: @waterway-lz;
 		line-width: 0.5;
 		line-cap: butt;
@@ -33,51 +33,27 @@
 		[len >= 1000]{ line-width: 1.5; }
 	}
   }
+
   ::label{
   	[zoom <= 5][len >= 2500],
   	[zoom = 5][len >= 1000],
   	[zoom > 5][len >= 500]{
 	  	text-name: "[name]";
-		text-size: 11;
+		text-size: 10;
 		text-face-name: @oblique-fonts;
-		text-fill: @waterway-lz;
-		text-halo-radius: @water-halo-radius;
-		text-halo-fill: @water-halo-fill;
+		text-fill: @water-text-lz;
+		text-halo-radius: 1.5;
+		text-halo-fill: rgba(255,255,255,0.5);
 		text-spacing: 250;
 		text-placement: line;
-		text-repeat-distance: @waterway-text-repeat-distance;
-		text-dy: 2;
+		text-repeat-distance: 125;
+		text-dy: 4;
+		text-max-char-angle-delta: 45;
+		text-simplify: 750;
+		text-smooth: 0.75;
 	}
   }
 }
-
-/*
-#waterways{
-
-	[zoom <= 5][len > 1000]{
-	    line-color: @water-border-color-zz;
-		line-width: @waterway-width-4;
-		[len > 2000]{ line-width: @waterway-width-3; }
-		[len > 3000]{ line-width: @waterway-width-2; }
-	}
-	[zoom = 6][len > 500]{
-	    line-color: @water-border-color-zz;
-		[len > 500]{ line-width: @waterway-width-4; }
-		[len > 1000]{ line-width: @waterway-width-3; }
-		[len > 2000]{ line-width: @waterway-width-2; }
-		[len > 3000]{ line-width: @waterway-width-1; }
-		
-	}
-	[zoom = 7][len > 100]{
-	    line-color: @water-border-color-zz;
-		[len > 100]{ line-width: @waterway-width-4; }
-		[len > 500]{ line-width: @waterway-width-3; }
-		[len > 1000]{ line-width: @waterway-width-2; }
-		[len > 2000]{ line-width: @waterway-width-1; }
-	}
-
-}
-*/
 
 #waterways {
 
@@ -86,7 +62,7 @@
   	[zoom >= 8]{
 
 		line-width: 0; 
-	    line-color: @water-border-color;
+	    line-color: @waterway-color;
 		line-cap: butt;
 		line-join: round;
 		line-clip: false;
@@ -95,7 +71,7 @@
 		    line-dasharray: 8,4; 
 		}
 		
-	    [zoom < 11] {line-color: @water-border-color-lz}
+	    [zoom < 11] {line-color: @water-border-color-mz}
 
 	    [zoom = 8]{
 	    	[len >= 30]{ line-width: @waterway-width-4; }
@@ -180,13 +156,14 @@
 
       	[feature != 'glacier'][intermittent != 1] {
         	polygon-fill: @water-color-lz;
-				
-	        [zoom >= 7]{
-	        	line-color: @water-border-color-lz;
-	        	polygon-fill: @water-color;
-	        	line-width: 0.3;
+	        [zoom = 8]{
+	        	polygon-fill: @water-color-mz;
 	        }
-	        [zoom >= 9]{line-width: 0.5;}
+	        [zoom >= 9]{
+	        	polygon-fill: @water-color;
+	        	line-width: 0.5;
+	        	line-color: @water-border-color-mz;
+	        }
 	        [zoom >= 11]{
 	          line-color: @water-border-color;
 	          line-width: 1;
@@ -203,6 +180,7 @@
 		text-name: "[name]";
 		text-size: 10;
 		text-fill: @water-text;
+		[zoom <=11]{ text-fill: @water-text-mz; }
 		text-face-name: @oblique-fonts;
 		text-halo-radius: @water-halo-radius;
 		text-halo-fill: @water-halo-fill;
@@ -210,7 +188,6 @@
 		text-wrap-width: 50;
     }
 }
-
 
 #waterway-text {
 
@@ -227,6 +204,7 @@
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
 			text-dy: 2;
+			[zoom = 10] { text-fill: @water-text-mz; }
 			[zoom >= 12] { text-size: 12; }
 			[zoom >= 14] { text-size: 14; }
 		}
