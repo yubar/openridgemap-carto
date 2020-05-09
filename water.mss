@@ -46,11 +46,11 @@
 		text-halo-fill: rgba(255,255,255,0.5);
 		text-spacing: 250;
 		text-placement: line;
-		text-repeat-distance: 125;
-		text-dy: 4;
-		text-max-char-angle-delta: 45;
-		text-simplify: 750;
-		text-smooth: 0.75;
+		text-repeat-distance: 150;
+		text-dy: 2;
+		text-max-char-angle-delta: 40;
+		text-simplify: 50;
+		text-smooth: 1;
 	}
   }
 }

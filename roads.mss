@@ -14,7 +14,7 @@
 #highways-lowzoom {
   [zoom <= 5] {
     [feature = 'motorway'],[feature = 'trunk'] {
-      line-color: @road-lz;
+      line-color: @road-mz;
       line-width: 0.6;
     }
   }
