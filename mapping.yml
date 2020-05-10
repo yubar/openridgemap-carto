@@ -37,6 +37,19 @@ tables:
     - {key: waterway, name: waterway, type: string}
     - {key: height, name: height, type: string}
 
+  place:
+    type: point
+    mapping:
+      place: [city, town, village, hamlet]
+    columns:
+    - {name: osm_id, type: id}
+    - {name: geometry, type: geometry}
+    - {name: place, type: mapping_value}
+    - {key: name, name: name, type: string}
+    - {key: "name:ru", name: name_ru, type: string}
+    - {key: population, name: population, type: integer}
+    - {key: admin_level, name: admin_level, type: integer}
+
   other_point:
     type: point
     mapping:
