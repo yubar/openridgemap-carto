@@ -84,7 +84,7 @@ FROM
 	) iso  ON true
 WHERE 
 	pplrank IS NOT NULL;
-
+*/
 /*
 SELECT
 	p1.id
