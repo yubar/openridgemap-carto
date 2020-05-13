@@ -6,12 +6,14 @@ SELECT
 ON CONFLICT DO NOTHING;
 
 ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS geomproj geometry;
+ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS geomlatlon geometry;
 ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS pplrank int;
 ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS ppliso float;
 
 UPDATE osm_place 
 SET 
 	geomproj = ST_Transform(geometry, 100001)
+	,geomlatlon = ST_Transform(geometry, 4326)
 	,pplrank = N 
 FROM (
 	SELECT
@@ -38,8 +40,8 @@ FROM (
 		LEFT JOIN LATERAL (
 			SELECT 
 				ST_Distance_Sphere(
-					p1.geomproj
-					,p2.geomproj
+					p1.geomlatlon
+					,p2.geomlatlon
 				) iso
 			FROM 
 				osm_place p2 
@@ -47,7 +49,7 @@ FROM (
 				p1.pplrank > p2.pplrank
 				AND p2.pplrank IS NOT NULL
 			ORDER BY 
-				p1.geomlatlon <-> p2.geomlatlon ASC
+				p1.geomproj <-> p2.geomproj ASC
 			LIMIT 1
 		) iso  ON true
 	WHERE 
