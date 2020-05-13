@@ -1,14 +1,17 @@
---ALTER TABLE public.osm_place DROP COLUMN IF EXISTS pplrank;
-/*
-ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS geomlatlon geometry;
+
+INSERT INTO spatial_ref_sys(srid, proj4text)
+SELECT
+	100001 srid
+	,'+proj=lcc +lon_0=100 +lat_1=47 +lat_2=62' proj4text
+ON CONFLICT DO NOTHING;
+
+ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS geomproj geometry;
 ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS pplrank int;
 ALTER TABLE public.osm_place ADD COLUMN IF NOT EXISTS ppliso float;
 
-
-
 UPDATE osm_place 
 SET 
-	geomlatlon = ST_ShiftLongitude(ST_Transform(geometry, 4326))
+	geomproj = ST_Transform(geometry, 100001)
 	,pplrank = N 
 FROM (
 	SELECT
@@ -20,123 +23,10 @@ FROM (
 WHERE
 	t.id = osm_place.id;
 
-CREATE INDEX IF NOT EXISTS osm_place_rank ON public.osm_place (pplrank, geomlatlon);
---DROP INDEX IF EXISTS osm_place_rank; 
-
-*/
-/*
-UPDATE osm_place P 
-SET ppliso = iso 
-FROM (
-	SELECT
-		(
-			SELECT 
-				ST_Distance_Sphere(
-					p1.geomlatlon
-					,p2.geomlatlon
-				)
-			FROM 
-				osm_place p2 
-			WHERE 
-				p1.pplrank > p2.pplrank
-				AND p2.pplrank IS NOT NULL
-			ORDER BY 
-				p1.geomlatlon <-> p2.geomlatlon ASC
-			LIMIT 1
-		) iso   
-		,p1.id
-	FROM osm_place p1
-	WHERE 
-		pplrank IS NOT NULL
-) T
-WHERE
-	P.id = T.id
-;
-*/
+CREATE INDEX IF NOT EXISTS osm_place_rank ON public.osm_place (pplrank, geomproj);
+CREATE INDEX IF NOT EXISTS osm_place_geomproj ON public.osm_place USING gist (geomproj);
 
 
-
-/*
-SELECT
-	p1.name_ru
-	,p1.population
-	,p2.id
-	,p2.name_ru
-	,p2.population
-	,ST_Distance_Sphere(
-		p1.geomlatlon
-		,p2.geomlatlon
-	)
-	,p1.geomlatlon <-> p2.geomlatlon
-	
-FROM
-	osm_place p1
-	,osm_place p2
-WHERE
-	p1.id = 148140	
-	AND p2.pplrank < p1.pplrank
-ORDER BY 
---p2.pplrank asc
-p1.geomlatlon <-> p2.geomlatlon ASC
-
---SELECT * FROM osm_place WHERE name='Анадырь'
-*/
-	
-
-/*
-	SELECT
-		(
-			SELECT 
-				ST_Distance_Sphere(
-					p1.geomlatlon
-					,p2.geomlatlon
-				)
-			FROM 
-				osm_place p2 
-			WHERE 
-				p1.pplrank > p2.pplrank
-				AND p2.pplrank IS NOT NULL
-			ORDER BY 
-				p1.geomlatlon <-> p2.geomlatlon ASC
-			LIMIT 1
-		) iso   
-		,p1.id
-	FROM osm_place p1
-	WHERE 
-		pplrank IS NOT NULL
-		AND place='town'
-	ORDER BY iso desc
-;
-
-
-	SELECT
-		iso.iso  
-		,p1.id
-	FROM 
-		osm_place p1
-		LEFT JOIN LATERAL (
-			SELECT 
-				ST_Distance_Sphere(
-					p1.geomlatlon
-					,p2.geomlatlon
-				) iso
-			FROM 
-				osm_place p2 
-			WHERE 
-				p1.pplrank > p2.pplrank
-				AND p2.pplrank IS NOT NULL
-			ORDER BY 
-				p1.geomlatlon <-> p2.geomlatlon ASC
-			LIMIT 1
-		) iso  ON true
-	WHERE 
-		pplrank IS NOT NULL
-		AND place='town'
-	ORDER BY iso desc
-;
-*/
-
-/*
 UPDATE osm_place P 
 SET ppliso = iso 
 FROM (
@@ -148,8 +38,8 @@ FROM (
 		LEFT JOIN LATERAL (
 			SELECT 
 				ST_Distance_Sphere(
-					p1.geomlatlon
-					,p2.geomlatlon
+					p1.geomproj
+					,p2.geomproj
 				) iso
 			FROM 
 				osm_place p2 
@@ -164,12 +54,13 @@ FROM (
 		pplrank IS NOT NULL
 ) T
 WHERE
-	P.id = T.id
-;
+	P.id = T.id;
 
-*/
 
+/*
 --CREATE TABLE osm_place_isolation (id int4, iso float, CONSTRAINT osm_place_isolation_pkey PRIMARY KEY (id));
+TRUNCATE TABLE osm_place_isolation
+
 INSERT INTO osm_place_isolation (id, iso)
 SELECT
 	p1.id
@@ -193,5 +84,55 @@ FROM
 	) iso  ON true
 WHERE 
 	pplrank IS NOT NULL;
+
+/*
+SELECT
+	p1.id
+	,p1."name"
+	,p1.population
+	,iso.name
+	,iso.iso  
+FROM 
+	osm_place p1
+	LEFT JOIN LATERAL (
+		SELECT 
+			ST_Distance_Sphere(
+				p1.geomlatlon
+				,p2.geomlatlon
+			) iso
+			,"name"
+		FROM 
+			osm_place p2 
+		WHERE 
+			p1.pplrank > p2.pplrank
+			AND p2.pplrank IS NOT NULL
+		ORDER BY 
+			p1.geomlatlon <-> p2.geomlatlon ASC
+		LIMIT 1
+	) iso  ON true
+WHERE 
+	pplrank IS NOT NULL
+	AND place='town'
+ORDER BY iso desc
+	;
+
+
+SELECT
+	p2."name"
+	,ST_Distance_Sphere(
+		p1.geomlatlon
+		,p2.geomlatlon
+	) iso
+	,p1.geomlatlon <-> p2.geomlatlon
 	
-	
+FROM 
+	osm_place p1,
+	osm_place p2 
+WHERE 
+	p1.id = 137699
+
+	AND p1.pplrank > p2.pplrank
+	AND p2.pplrank IS NOT NULL
+ORDER BY 
+	p1.geomlatlon <-> p2.geomlatlon ASC
+*/
