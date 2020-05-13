@@ -35,9 +35,14 @@
   }
 
   ::label{
-  	[zoom <= 5][len >= 2500],
+  	[zoom >= 3][zoom <= 5][len >= 2500],
   	[zoom = 5][len >= 1000],
   	[zoom > 5][len >= 500]{
+  		[zoom = 3]{
+  			text-size: 8; 
+  			text-simplify: 500;
+			text-smooth: 1;
+  		}
 	  	text-name: "[name]";
 		text-size: 10;
 		text-face-name: @oblique-fonts;
