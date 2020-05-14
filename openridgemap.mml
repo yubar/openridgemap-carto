@@ -313,6 +313,31 @@ Layer:
     properties:
       minzoom: 10
 
+  - id: cities
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT 
+          geometry
+          ,COALESCE(NULLIF(name_ru,''), name) "name"
+          ,admin_level
+          ,COALESCE(population, 0) population
+          ,ppliso
+          ,place
+        FROM
+          public.osm_place
+        ORDER BY 
+          --admin_level ASC
+          --,ppliso DESC NULLS LAST
+          CASE WHEN admin_level = 2 AND !scale_denominator!::real > 60e6 THEN 1 ELSE 0 END DESC 
+          , population DESC NULLS LAST
+        ) AS cities
+    properties:
+      minzoom: 3
+      maxzoom: 10
+
   - id: relief-points
     class: points
     geometry: point
