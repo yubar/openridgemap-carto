@@ -181,7 +181,7 @@
     }
 
 
-    [areapx >= 1000] {
+    [zoom >= 5][areapx >= 1000] {
 		text-name: "[name]";
 		text-size: 10;
 		text-fill: @water-text;

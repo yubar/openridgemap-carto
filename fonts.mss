@@ -11,11 +11,15 @@
 
 @condensed-sans-fonts: 
 				"DejaVu Sans Condensed",
-				"Noto Sans Condensed", 
+				"Noto Sans Regular Condensed", 
                 @book-fonts;
 
 @condensed-bold-sans-fonts: 
 				"DejaVu Sans Condensed Bold",
                 "Noto Sans Condensed Bold", 
                 @bold-fonts;
-                
+
+@condensed-italic-sans-fonts:
+				"DejaVu Sans Condensed Oblique",
+				"Noto Sans Condensed Regular Italic", 
+                @book-fonts;

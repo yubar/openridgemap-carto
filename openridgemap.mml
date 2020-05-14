@@ -321,7 +321,7 @@ Layer:
       table: |-
         (SELECT 
           geometry
-          ,COALESCE(name_ru,name) "name"
+          ,COALESCE(NULLIF(name_ru,''), name) "name"
           ,admin_level
           ,COALESCE(population, 0) population
           ,ppliso
@@ -331,10 +331,12 @@ Layer:
         ORDER BY 
           --admin_level ASC
           --,ppliso DESC NULLS LAST
-          population DESC NULLS last
+          CASE WHEN admin_level = 2 AND !scale_denominator!::real > 60e6 THEN 1 ELSE 0 END DESC 
+          , population DESC NULLS LAST
         ) AS cities
     properties:
       minzoom: 3
+      maxzoom: 10
 
   - id: relief-points
     class: points
