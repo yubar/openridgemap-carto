@@ -656,8 +656,7 @@
         
         point-file: url('symbols/city.png');
         
-        text-wrap-width: 130;
-        text-wrap-before: "true";
+        text-wrap-width: 100;
         text-face-name: @condensed-bold-sans-fonts; 
         text-dx: "11";
         text-dy: "6";
