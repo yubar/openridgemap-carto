@@ -427,7 +427,7 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='city'],[place='town']{ text-face-name: @condensed-sans-fonts; }
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
+        text-name: "[name]]]><Placement dx='4' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
         text-avoid-edges: true;
     }
   }
