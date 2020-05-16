@@ -235,6 +235,7 @@
 }
 
 #cities {
+
   [zoom = 3]{
     [admin_level = 2], [population >= 1000000], [ppliso > 500000]{
 
@@ -262,13 +263,18 @@
         text-dy: 5;
       }
       
-      [admin_level != 2][population < 1000000] {
-        point-file: url('symbols/city_small2_crop.png');
-        [population > 100000] { point-file: url('symbols/city3lz.png'); }
+      [admin_level != 2][population >= 100000][population < 1000000] {
+        point-file: url('symbols/city3lz.png');
         text-size: 9;
         text-face-name: @condensed-italic-sans-fonts;
       }
-      
+      [admin_level != 2][population < 100000] {
+        point-file: url('symbols/city_small2_crop.png');
+        text-size: 9;
+        text-dx: 2;
+        text-dy: 2;
+        text-face-name: @condensed-italic-sans-fonts;
+      }
     }
   }
 
@@ -313,9 +319,8 @@
         text-face-name: @condensed-italic-sans-fonts;
 
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
+        text-name: "[name]]]><Placement dx='4' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
         text-avoid-edges: true;
-
       }
 
   }
@@ -352,11 +357,11 @@
 
     [admin_level != 2][population < 250000][ppliso > 100000]{
         point-file: url('symbols/city_small2_crop.png');
+        text-size: 9;
         [population >= 20000] { 
           point-file: url('symbols/city3lz.png'); 
           text-size: 10;
         }
-        text-size: 9;
         text-fill: #000;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
@@ -365,9 +370,9 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='city'],[place='town']{ text-face-name: @condensed-sans-fonts; }
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
     }
+
   }
 
   [zoom = 6]{
@@ -411,7 +416,7 @@
         point-file: url('symbols/city_small2_crop.png');
         [population >= 10000] { 
           point-file: url('symbols/city3lz.png'); 
-          text-size: 9; /* to not exceed OTM's city<400k */
+          text-size: 9;
         }
         text-size: 9;
         text-fill: #000;
@@ -422,7 +427,7 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='city'],[place='town']{ text-face-name: @condensed-sans-fonts; }
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
         text-avoid-edges: true;
     }
   }
@@ -486,7 +491,7 @@
 
         [population >= 5000] { 
           point-file: url('symbols/city3lz.png'); 
-          text-size: 9; /* to not exceed OTM's towns */
+          text-size: 9;
         }
         text-size: 9;
         text-fill: #000;
@@ -499,9 +504,7 @@
           text-face-name: @condensed-sans-fonts; 
         }
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA[";  
-        text-avoid-edges: true;
-        
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
     }
 
   }
@@ -569,10 +572,8 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='town']{ text-face-name: @condensed-sans-fonts;}
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
     }
-    
   }
 
   [zoom = 9]{
@@ -639,10 +640,8 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='town']{ text-face-name: @condensed-sans-fonts;}
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
     }
-
   }
 
   [zoom = 10]{
@@ -656,8 +655,7 @@
         
         point-file: url('symbols/city.png');
         
-        text-wrap-width: 130;
-        text-wrap-before: "true";
+        text-wrap-width: 100;
         text-face-name: @condensed-bold-sans-fonts; 
         text-dx: "11";
         text-dy: "6";
@@ -723,8 +721,7 @@
         text-face-name: @condensed-italic-sans-fonts;
         [place='town']{ text-face-name: @condensed-sans-fonts;}
         text-placement-type: list;
-        text-name: "[name]]]><Placement dx='0' dy='2' /><Placement dx='4' dy='-3' /><Placement dx='4' dy='3' /><Placement dx='-3' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
+        text-name: "[name]]]><Placement dx='3' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
     }
   }
 }
