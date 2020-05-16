@@ -35,14 +35,10 @@
   }
 
   ::label{
-  	[zoom >= 3][zoom <= 5][len >= 2500],
+  	[zoom > 2][zoom <= 5][len >= 2500],
   	[zoom = 5][len >= 1000],
-  	[zoom > 5][len >= 500]{
-  		[zoom = 3]{
-  			text-size: 8; 
-  			text-simplify: 500;
-			text-smooth: 1;
-  		}
+  	[zoom = 6][len >= 500],
+  	[zoom = 7][len >= 250]{
 	  	text-name: "[name]";
 		text-size: 10;
 		text-face-name: @oblique-fonts;
@@ -56,6 +52,16 @@
 		text-max-char-angle-delta: 40;
 		text-simplify: 50;
 		text-smooth: 1;
+		[zoom = 3]{
+  			text-size: 8; 
+  			text-simplify: 500;
+			text-smooth: 1;
+  		}
+		[zoom = 7][len < 500]{
+  			text-size: 9; 
+  			text-simplify: 10;
+  			text-max-char-angle-delta: 30;
+  		}
 	}
   }
 }
