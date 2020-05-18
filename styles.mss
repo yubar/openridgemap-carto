@@ -37,3 +37,8 @@
 @standard-wrap-width: 30;
 @wide-wrap-width: 45;
 @standard-line-spacing-size: -1.5;
+
+
+Map {
+	buffer-size: 256;
+}

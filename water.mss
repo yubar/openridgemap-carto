@@ -206,7 +206,7 @@
   	,[feature = 'canal']{
 		[zoom >= 8]{
 			text-name: "[name]";
-			text-size: 10;
+			text-size: 8;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -216,6 +216,11 @@
 			text-repeat-distance: @waterway-text-repeat-distance;
 			text-dy: 2;
 			[zoom = 10] { text-fill: @water-text-mz; }
+			[zoom = 8][len >=50],
+			[zoom = 9][len >=30],
+			[zoom >= 10]{ 
+				text-size: 10; 
+			}
 			[zoom >= 12] { text-size: 12; }
 			[zoom >= 14] { text-size: 14; }
 		}
