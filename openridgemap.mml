@@ -40,9 +40,9 @@ Stylesheet:
   - styles.mss
   - shapefiles.mss
   - water.mss
-  - ridges.mss
-  - roads.mss
-  - points.mss
+ # - ridges.mss
+ # - roads.mss
+ # - points.mss
 
 Layer:
   - id: ocean-lz
@@ -90,8 +90,14 @@ Layer:
           LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
           LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
         WHERE 
-          COALESCE(R.len, JM.len, L.len) > 40*SQRT(!pixel_width!::real*!pixel_height!::real)/1000
-          OR !scale_denominator!::real < 150000
+          COALESCE(R.len, JM.len, L.len) > 
+          CASE 
+            WHEN !scale_denominator!::real > 1200000 THEN 30
+            WHEN !scale_denominator!::real > 600000 THEN 10
+            WHEN !scale_denominator!::real > 300000 THEN 5
+            WHEN !scale_denominator!::real > 150000 THEN 2
+            ELSE SQRT(!pixel_width!::real*!pixel_height!::real)/1000
+          END
         ) AS waterways
     properties:
       minzoom: 8
@@ -307,6 +313,7 @@ Layer:
           ,COALESCE(NULLIF(name_ru,''), "name") "name"
           ,geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+          ,len
         FROM
           public.osm_waterway
         ) AS waterways
