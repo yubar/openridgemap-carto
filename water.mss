@@ -200,11 +200,11 @@
     }
 }
 
-#waterway-text {
+#waterways::text {
 
 	[feature = 'river']
   	,[feature = 'canal']{
-		[zoom >= 10]{
+		[zoom >= 8]{
 			text-name: "[name]";
 			text-size: 10;
 			text-face-name: @oblique-fonts;

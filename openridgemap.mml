@@ -40,9 +40,9 @@ Stylesheet:
   - styles.mss
   - shapefiles.mss
   - water.mss
- # - ridges.mss
- # - roads.mss
- # - points.mss
+  - ridges.mss
+  - roads.mss
+  - points.mss
 
 Layer:
   - id: ocean-lz
@@ -84,13 +84,14 @@ Layer:
           ,L.geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,COALESCE(R.len, JM.len, L.len) AS len
+          ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
         FROM
           public.osm_waterway L
           LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
           LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
           LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
         WHERE 
-          COALESCE(R.len, JM.len, L.len) > 
+          COALESCE(R.len, JM.len, L.len) >= 
           CASE 
             WHEN !scale_denominator!::real > 1200000 THEN 30
             WHEN !scale_denominator!::real > 600000 THEN 10
@@ -301,24 +302,6 @@ Layer:
         ) AS water_points
     properties:
       minzoom: 12
-
-  - id: waterway-text
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT 
-          feature
-          ,COALESCE(NULLIF(name_ru,''), "name") "name"
-          ,geometry
-          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
-          ,len
-        FROM
-          public.osm_waterway
-        ) AS waterways
-    properties:
-      minzoom: 10
 
   - id: cities
     geometry: point
