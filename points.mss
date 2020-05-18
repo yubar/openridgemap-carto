@@ -252,7 +252,7 @@
       text-dy: 4;
       text-placement-type: simple;
       text-placements: "S,SE,SW,E,W,N,NE,NW";
-      text-avoid-edges: true;
+      
 
       [admin_level = 2] {
         point-file: url('symbols/city_small.png');
@@ -320,7 +320,7 @@
 
         text-placement-type: list;
         text-name: "[name]]]><Placement dx='4' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
+        
       }
 
   }
@@ -428,7 +428,6 @@
         [place='city'],[place='town']{ text-face-name: @condensed-sans-fonts; }
         text-placement-type: list;
         text-name: "[name]]]><Placement dx='4' dy='-2' /><Placement dx='3' dy='2' /><Placement dx='0' dy='-5' /><Placement dx='0' dy='2' /><![CDATA["; 
-        text-avoid-edges: true;
     }
   }
 
