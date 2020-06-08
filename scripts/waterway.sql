@@ -40,6 +40,8 @@ CREATE INDEX IF NOT EXISTS osm_waterway_named_name ON public.osm_waterway_named(
 CREATE INDEX IF NOT EXISTS osm_waterway_named_start ON public.osm_waterway_named(startp);
 
 
+DROP TABLE IF EXISTS tmp_waterways;
+
 CREATE TEMP TABLE IF NOT EXISTS tmp_waterways (
 	id serial
 	,"name" varchar
@@ -50,7 +52,7 @@ CREATE TEMP TABLE IF NOT EXISTS tmp_waterways (
 	,startpoint geometry
 	,endpoint geometry
 );
-TRUNCATE TABLE tmp_waterways;
+--TRUNCATE TABLE tmp_waterways;
 DROP INDEX IF EXISTS Ix_tmp_waterways_parent;
 
 INSERT INTO tmp_waterways ("name", len, len2, parent, child, startpoint, endpoint)
@@ -123,7 +125,7 @@ CREATE TABLE IF NOT EXISTS osm_waterway_join(
 	,endpoint geometry
 );
 
-TRUNCATE TABLE osm_waterway_join;
+--TRUNCATE TABLE osm_waterway_join;
 
 WITH RECURSIVE rec AS (
 	SELECT 
@@ -170,6 +172,7 @@ INSERT INTO osm_waterway_join("name", len, ids, startpoint, endpoint)
 SELECT name, len, ids, startpoint, endpoint FROM fnl
 WHERE N = 1 AND N2 = 1;
 
+DROP TABLE IF EXISTS osm_waterway_join_member;
 
 CREATE TABLE IF NOT EXISTS osm_waterway_join_member(
 	id serial
@@ -180,7 +183,7 @@ CREATE TABLE IF NOT EXISTS osm_waterway_join_member(
 	,CONSTRAINT osm_waterway_join_member_pkey PRIMARY KEY (osm_id, id)
 );
 
-TRUNCATE TABLE osm_waterway_join_member;
+--TRUNCATE TABLE osm_waterway_join_member;
 
 INSERT INTO osm_waterway_join_member("name", len, osm_id, jid)
 SELECT "name", len, UNNEST(ids), id FROM osm_waterway_join;
