@@ -150,7 +150,7 @@ WITH RECURSIVE rec AS (
 		,r.startpoint
 		,s.endpoint
 	FROM rec r
-		JOIN tmp_waterways s ON r.child = s.parent  AND n<400
+		JOIN tmp_waterways s ON r.child = s.parent
 )
 , fnl AS (
 	SELECT
@@ -186,5 +186,6 @@ INSERT INTO osm_waterway_join_member("name", len, osm_id, jid)
 SELECT "name", len, UNNEST(ids), id FROM osm_waterway_join;
 
 
+DROP TABLE tmp_waterways;
 
 
