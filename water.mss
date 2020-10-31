@@ -200,7 +200,7 @@
     }
 }
 
-#waterways::text {
+#waterway-names::text {
 
 	[feature = 'river']
   	,[feature = 'canal']{
