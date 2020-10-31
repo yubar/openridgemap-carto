@@ -186,28 +186,6 @@ Layer:
     properties:
       minzoom: 11
 
-  - id: ridge-names
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-          'ridge' AS feature
-          ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L.name,''), NULLIF(R.name_ru,''), NULLIF(R.name,'')) "name"
-          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
-          ,COALESCE(R.len, L.len) AS len
-        FROM 
-          public.osm_relief_line L
-          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
-          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
-        WHERE
-          L."name" <> ''
-          OR R."name" <>''
-        ) AS ridgenames
-    properties:
-      minzoom: 9
-
   - id: highways-lowzoom
     geometry: linestring
     <<: *extents
@@ -302,6 +280,58 @@ Layer:
         ) AS water_points
     properties:
       minzoom: 12
+
+  - id: waterway-names
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          feature
+          ,L.geometry
+          ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
+          ,GREATEST (R.len, JM.len, L.len) AS len
+          ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
+        FROM
+          public.osm_waterway L
+          LEFT JOIN public.osm_waterway_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_waterway_rel R ON RM.osm_id = R.osm_id
+          LEFT JOIN public.osm_waterway_join_member JM ON JM.osm_id = L.osm_id
+        WHERE 
+          GREATEST (R.len, JM.len, L.len) >= 
+          CASE 
+            WHEN !scale_denominator!::real > 1200000 THEN 30
+            WHEN !scale_denominator!::real > 600000 THEN 10
+            WHEN !scale_denominator!::real > 300000 THEN 5
+            WHEN !scale_denominator!::real > 150000 THEN 2
+            ELSE SQRT(!pixel_width!::real*!pixel_height!::real)/1000
+          END
+        ) AS waterways
+    properties:
+      minzoom: 8
+
+  - id: ridge-names
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          'ridge' AS feature
+          ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L.name,''), NULLIF(R.name_ru,''), NULLIF(R.name,'')) "name"
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+          ,COALESCE(R.len, L.len) AS len
+        FROM 
+          public.osm_relief_line L
+          LEFT JOIN public.osm_ridge_rel_member RM ON L.osm_id = RM."member"
+          LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
+        WHERE
+          L."name" <> ''
+          OR R."name" <>''
+        ) AS ridgenames
+    properties:
+      minzoom: 9
 
   - id: cities
     geometry: point
