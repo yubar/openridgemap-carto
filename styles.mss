@@ -8,15 +8,16 @@
 @boundary-color: fadeout(@boundary-color-lz, 80%);
 
 
-@water-color: #95cfe8;
 @waterway-color: #004080;
 @water-border-color: @waterway-color;
-@water-text: @water-border-color;
+@water-color: lighten(@water-border-color, 50%);
+@water-area: @waterway-color;
+@water-text: lighten(@water-border-color, 50%);
 
 @waterway-mz: #2367aa;
 @water-color-mz: darken(@water-color, 15%);
 @water-border-color-mz: @waterway-mz;
-@water-text-mz: darken(@waterway-mz, 20%);
+@water-text-mz: @water-text;
 
 @waterway-lz: @water-color-lz;
 @water-color-lz: darken(@water-color, 30%);
@@ -24,8 +25,8 @@
 @water-text-lz: darken(@waterway-lz, 20%);
 
 @waterway-text-repeat-distance: 100;
-@water-halo-radius: 1;
-@water-halo-fill: rgba(255,255,255,0.7);
+@water-halo-radius: 0;
+@water-halo-fill: rgba(0,0,0,0.7);
 
 @glacier: rgba(0,187,255,0.1);
 @glacier-lowzoom: rgba(0,187,255,0.2);

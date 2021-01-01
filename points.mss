@@ -1,6 +1,6 @@
 @landform-text: #401a10;
 @amenity-color: #b00090;
-@city-halo-fill: @standard-halo-fill;
+@city-halo-fill: #111;
 
 #water-points {
   [feature='rapid'],[feature='waterfall'] {
@@ -241,7 +241,7 @@
 
       point-file: url('symbols/city_small2.png');
       text-size: 10;
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-wrap-width: 100;
       text-halo-radius: 1;
@@ -283,7 +283,7 @@
       [admin_level = 2] {
         point-file: url('symbols/city_small.png');
         text-size: 10;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 100;
         text-halo-radius: 1;
@@ -296,7 +296,7 @@
       [admin_level != 2][population >= 1000000] {
         point-file: url('symbols/town_z8_crop.png');
         text-size: 10;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 100;
         text-halo-radius: 1;
@@ -311,7 +311,7 @@
         point-file: url('symbols/city_small2_crop.png');
         [population >= 50000] { point-file: url('symbols/city3lz.png'); }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -345,7 +345,7 @@
       }
 
       text-size: 10;
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-wrap-width: 100;
       text-halo-radius: 2;
@@ -362,7 +362,7 @@
           point-file: url('symbols/city3lz.png'); 
           text-size: 10;
         }
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -404,7 +404,7 @@
       text-name: "[name]]]><Placement dx='5' dy='-3' /><Placement dx='0' dy='5' /><Placement dx='5' dy='3' /><Placement dx='0' dy='-6' /><Placement dx='-3' dy='4' /><Placement dx='-5' dy='5' /><![CDATA[";
       text-face-name: @condensed-sans-fonts;
       text-size: 10;
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-wrap-width: 100;
       text-halo-radius: 2;
@@ -419,7 +419,7 @@
           text-size: 9;
         }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -477,7 +477,7 @@
       }
 
       text-face-name: @condensed-sans-fonts;
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-halo-radius: 2;
       text-placement: interior;
@@ -493,7 +493,7 @@
           text-size: 9;
         }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -549,7 +549,7 @@
         text-name: "[name]]]><Placement dx='5' dy='-3' /><Placement dx='0' dy='5' /><Placement dx='5' dy='3' /><Placement dx='0' dy='-6' /><Placement dx='-3' dy='4' /><![CDATA[";
       }
 
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-halo-radius: 2;
       text-placement: interior;
@@ -563,7 +563,7 @@
           text-size: 10;
         }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -617,7 +617,7 @@
         [population > 50000] { text-size: 12; }
       }
 
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-halo-radius: 2;
       text-placement: interior;
@@ -631,7 +631,7 @@
           text-size: 10;
         }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;
@@ -698,7 +698,7 @@
         }
       }
 
-      text-fill: #000;
+      text-fill: #ccc;
       text-halo-fill: @city-halo-fill;
       text-halo-radius: 2;
       text-placement: interior;
@@ -712,7 +712,7 @@
           text-size: 10;
         }
         text-size: 9;
-        text-fill: #000;
+        text-fill: #ccc;
         text-halo-fill: @city-halo-fill;
         text-wrap-width: 50;
         text-halo-radius: 1.5;

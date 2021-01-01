@@ -171,7 +171,7 @@
 	        	polygon-fill: @water-color-mz;
 	        }
 	        [zoom >= 9]{
-	        	polygon-fill: @water-color;
+	        	polygon-fill: @water-area;
 	        	line-width: 0.5;
 	        	line-color: @water-border-color-mz;
 	        }
