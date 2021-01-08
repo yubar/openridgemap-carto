@@ -14,6 +14,7 @@ FROM
 	,eps
 WHERE 
 	P.mountain_pass = TRUE
+	AND angle IS NULL
 	AND ST_DWithin(P.geometry, L.geometry, 0.1);
 
 	
@@ -36,4 +37,6 @@ WHERE
 		P.waterway = 'waterfall'
 		OR P.whitewater = 'rapid' OR rapid_name<>'' OR rapid_grade<>''
 	)
+	AND angle IS NULL
 	AND ST_DWithin(P.geometry, L.geometry, 0.1);
+	
