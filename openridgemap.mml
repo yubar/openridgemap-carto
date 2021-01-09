@@ -320,7 +320,7 @@ Layer:
         (SELECT
           'ridge' AS feature
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L.name,''), NULLIF(R.name_ru,''), NULLIF(R.name,'')) "name"
-          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 200), 4, true) geometry
           ,COALESCE(R.len, L.len) AS len
         FROM 
           public.osm_relief_line L
@@ -329,6 +329,7 @@ Layer:
         WHERE
           L."name" <> ''
           OR R."name" <>''
+          OR COALESCE(R.len, L.len) > 30
         ) AS ridgenames
     properties:
       minzoom: 9
