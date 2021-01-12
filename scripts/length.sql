@@ -15,7 +15,10 @@ FROM
 		JOIN public.osm_relief_line L ON RM."member" = L.osm_id
 	GROUP BY R.osm_id
 ) t
-WHERE t.osm_id = R.osm_id;
+WHERE 
+	t.osm_id = R.osm_id
+	AND R.len IS NULL;
+
 
 ALTER TABLE public.osm_relief_line ADD COLUMN IF NOT EXISTS len float;
 
@@ -23,7 +26,8 @@ UPDATE public.osm_relief_line
 SET 
 	len = ST_Length(
 		ST_AsText(ST_Transform(geometry, 26915))
-	)/1000;
+	)/1000
+WHERE len IS NULL;
 	
 
 ALTER TABLE public.osm_waterway_rel ADD COLUMN IF NOT EXISTS len float;
@@ -42,7 +46,9 @@ FROM
 		JOIN public.osm_waterway L ON RM."member" = L.osm_id
 	GROUP BY R.osm_id
 ) t
-WHERE t.osm_id = R.osm_id;
+WHERE 
+	t.osm_id = R.osm_id
+	AND R.len IS NULL;
 
 
 ALTER TABLE public.osm_waterway ADD COLUMN IF NOT EXISTS len float;
@@ -51,4 +57,5 @@ UPDATE public.osm_waterway
 SET 
 	len = ST_Length(
 		ST_AsText(ST_Transform(geometry, 26915))
-	)/1000;
+	)/1000
+WHERE len IS NULL;
