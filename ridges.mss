@@ -50,7 +50,7 @@
         text-name: "[name]";
         text-size: 0;
         text-face-name: @oblique-fonts;
-    text-fill: #ecb;
+    text-fill: #fcf1c8; 
         text-halo-radius: 1;
     text-halo-fill: #111;/*@standard-halo-fill;*/
         text-spacing: 500;
