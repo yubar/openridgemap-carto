@@ -115,6 +115,10 @@
       
     }
 
+    [zoom = 11]{
+      marker-transform: scale(1.4), rotate([angle]);
+    }
+
     [zoom = 14]{
       marker-transform: scale(1.4), rotate([angle]);
     }
@@ -133,7 +137,7 @@
       marker-clip: false;
 
       [feature = 'peak']{
-        marker-file: url('symbols/peak_otm.png');
+        marker-file: url('symbols/peak_otm_new2.png');
         marker-fill: @landform-color;
       }
       [feature = 'volcano']{

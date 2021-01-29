@@ -1,7 +1,7 @@
-@waterway-width-4: 0.5;
-@waterway-width-3: 1.0;
-@waterway-width-2: 1.5;
-@waterway-width-1: 2.0;
+@waterway-width-4: 1;
+@waterway-width-3: 1.5;
+@waterway-width-2: 2.5;
+@waterway-width-1: 3;
 
 
 #waterways-gen{
@@ -126,9 +126,9 @@
   	[intermittent != 1][zoom >= 11] {
 
 	  	line-color: @water-border-color;
-  		[zoom <= 12] {line-width: 0.5;}
-  		[zoom >= 13] {line-width: 1;}
-		[zoom >= 15] {line-width: 2.5;}
+  		[zoom <= 12] {line-width: 1;}
+  		[zoom >= 13] {line-width: 2;}
+		[zoom >= 15] {line-width: 5;}
 
   	}
 
@@ -189,7 +189,7 @@
 
     [zoom >= 5][areapx >= 1000] {
 		text-name: "[name]";
-		text-size: 10;
+		text-size: 14;
 		text-fill: @water-text;
 		[zoom <=11]{ text-fill: @water-text-mz; }
 		text-face-name: @oblique-fonts;
@@ -206,7 +206,7 @@
   	,[feature = 'canal']{
 		[zoom >= 8]{
 			text-name: "[name]";
-			text-size: 8;
+			text-size: 12;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -214,15 +214,15 @@
 			text-spacing: 250;
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 2;
+			text-dy: 5;
 			[zoom = 10] { text-fill: @water-text-mz; }
 			[zoom = 8][len >=50],
 			[zoom = 9][len >=30],
 			[zoom >= 10]{ 
-				text-size: 10; 
+				text-size: 16; 
 			}
-			[zoom >= 12] { text-size: 12; }
-			[zoom >= 14] { text-size: 14; }
+			[zoom >= 12] { text-size: 18; }
+			[zoom >= 14] { text-size: 20; }
 		}
 	}
 
@@ -233,7 +233,7 @@
 		[intermittent != 1][zoom >= 11]{
 
 			text-name: "[name]";
-			text-size: 10;
+			text-size: 14;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -242,8 +242,8 @@
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
 			text-dy: 1;
-			[zoom >= 12] { text-size: 11; }
-			[zoom >= 14] { text-size: 13; }
+			[zoom >= 12] { text-size: 16; }
+			[zoom >= 14] { text-size: 18; }
 
 		}
 	}

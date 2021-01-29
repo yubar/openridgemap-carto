@@ -1,4 +1,4 @@
-@standard-halo-radius: 1;
+@standard-halo-radius: 2;
 @standard-halo-fill: rgba(192,192,192,0.5);
 
 @land-color: #f4f0ec;

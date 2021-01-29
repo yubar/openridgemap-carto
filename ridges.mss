@@ -1,17 +1,17 @@
 @ridge-width-4: 1;
 @ridge-width-3: 2;
-@ridge-width-2: 3;
-@ridge-width-1: 4;
+@ridge-width-2: 4;
+@ridge-width-1: 6;
 
-@text-size-4: 10;
-@text-size-3: 12;
-@text-size-2: 14;
-@text-size-1: 16;
+@text-size-4: 16;
+@text-size-3: 18;
+@text-size-2: 20;
+@text-size-1: 22;
 
-@text-dy-4: 4;
-@text-dy-3: 6;
-@text-dy-2: 9;
-@text-dy-1: 12;
+@text-dy-4: 6;
+@text-dy-3: 8;
+@text-dy-2: 12;
+@text-dy-1: 16;
 
 #ridges[zoom >= 11][feature = 'ridge']{
     line-color: @landform-color;
@@ -42,11 +42,9 @@
 
 #ridge-names[zoom >= 9]{
     text-name: "[name]";
-    text-size: 0;
     text-face-name: @oblique-fonts;
     text-fill: #000;
-    text-halo-radius: @ridge-halo-radius;
-    text-halo-fill: @standard-halo-fill;
+    
     text-spacing: 500;
     text-character-spacing: 10;
     text-placement: line;
@@ -94,6 +92,8 @@
     }
     [zoom = 11]{
         text-spacing: 1000;
+        text-halo-radius: @ridge-halo-radius;
+        text-halo-fill: @standard-halo-fill;
         [len >= 05]{ text-size: @text-size-4; text-dy: @text-dy-4; }
         [len >= 10]{ text-size: @text-size-3; text-dy: @text-dy-3; }
         [len >= 30]{ text-size: @text-size-2; text-dy: @text-dy-2; }
