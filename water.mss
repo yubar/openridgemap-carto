@@ -1,7 +1,7 @@
-@waterway-width-4: 1;
-@waterway-width-3: 1.5;
-@waterway-width-2: 2.5;
-@waterway-width-1: 3;
+@waterway-width-4: 0.5;
+@waterway-width-3: 1;
+@waterway-width-2: 1.5;
+@waterway-width-1: 2;
 
 
 #waterways-gen{
@@ -93,14 +93,14 @@
 	    	[len >= 30]{ line-width: @waterway-width-3; }
 	    	[len >= 50]{ line-width: @waterway-width-2; }
 
-	    }
+	    }/*
 	    [zoom = 10]{
 	        [len >= 5]{ line-width: @waterway-width-4; }
 	        [len >= 10]{ line-width: @waterway-width-3; }
 	        [len >= 30]{ line-width: @waterway-width-2; }
 	        [len >= 50]{ line-width: @waterway-width-1; }
-	    }
-	    [zoom = 11]{
+	    }*/
+	    [zoom >= 10]{
 	        [len >= 2]{ line-width: @waterway-width-4; }
 	        [len >= 5]{ line-width: @waterway-width-3; }
 	        [len >= 10]{ line-width: @waterway-width-2; }
@@ -123,7 +123,7 @@
   [feature = 'wadi'],
   [feature = 'drain'] {
 
-  	[intermittent != 1][zoom >= 11] {
+  	[intermittent != 1][zoom >= 10] {
 
 	  	line-color: @water-border-color;
   		[zoom <= 12] {line-width: 1;}
@@ -214,11 +214,14 @@
 			text-spacing: 250;
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 5;
-			[zoom = 10] { text-fill: @water-text-mz; }
+			text-dy: 3;
+			[zoom = 10] { text-fill: @water-text; }
 			[zoom = 8][len >=50],
 			[zoom = 9][len >=30],
 			[zoom >= 10]{ 
+				text-size: 14; 
+			}
+			[zoom >= 11]{ 
 				text-size: 16; 
 			}
 			[zoom >= 12] { text-size: 18; }
@@ -230,10 +233,10 @@
 	[feature = 'ditch'],
 	[feature = 'wadi'],
 	[feature = 'drain']{
-		[intermittent != 1][zoom >= 11]{
+		[intermittent != 1][zoom >= 10]{
 
 			text-name: "[name]";
-			text-size: 14;
+			text-size: 12;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -241,7 +244,8 @@
 			text-spacing: 250;
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 1;
+			text-dy: 2;
+			[zoom >= 11] { text-size: 14; }
 			[zoom >= 12] { text-size: 16; }
 			[zoom >= 14] { text-size: 18; }
 

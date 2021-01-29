@@ -81,7 +81,7 @@ Layer:
       table: |-
         (SELECT
           feature
-          ,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 25), 4, true) geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,GREATEST (R.len, JM.len, L.len) AS len
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
@@ -165,7 +165,8 @@ Layer:
         (SELECT 
           'ridge' AS feature
           ,COALESCE(NULLIF(R.name_ru,''), R."name", NULLIF(L.name_ru,''), L."name") "name"
-          ,L.geometry
+          --,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 25), 4, true) geometry
           ,COALESCE(R.len, L.len) AS len
         FROM
           public.osm_relief_line L
@@ -173,7 +174,7 @@ Layer:
           LEFT JOIN public.osm_ridge_rel R ON RM.osm_id = R.osm_id
         WHERE
           (
-            COALESCE(R.len, L.len)*1000 > 50*SQRT(!pixel_width!::real*!pixel_height!::real)
+            COALESCE(R.len, L.len)*1000 > 10*SQRT(!pixel_width!::real*!pixel_height!::real)
             OR !scale_denominator!::real < 75000
           ) AND (
             feature = 'ridge'
@@ -184,7 +185,7 @@ Layer:
           )
         ) AS ridges
     properties:
-      minzoom: 11
+      minzoom: 10
 
   - id: highways-lowzoom
     geometry: linestring
@@ -289,7 +290,7 @@ Layer:
       table: |-
         (SELECT
           feature
-          ,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 25), 4, true) geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,GREATEST (R.len, JM.len, L.len) AS len
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
@@ -396,7 +397,7 @@ Layer:
             ,elevation DESC NULLS LAST
         ) AS relief_points
     properties:
-      minzoom: 11
+      minzoom: 10
 
   - id: other-points
     class: points

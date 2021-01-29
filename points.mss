@@ -94,7 +94,7 @@
 }
 
 #relief-points{
-  [feature = 'pass'][zoom >= 11] {
+  [feature = 'pass'][zoom >= 10] {
     marker-file: url('symbols/mountain_pass.svg');
     marker-placement: interior;
     marker-clip: false;
@@ -114,7 +114,9 @@
       marker-allow-overlap: true; 
       
     }
-
+    [zoom = 10]{
+      marker-transform: scale(1.2), rotate([angle]);
+    }
     [zoom = 11]{
       marker-transform: scale(1.4), rotate([angle]);
     }
@@ -137,7 +139,7 @@
       marker-clip: false;
 
       [feature = 'peak']{
-        marker-file: url('symbols/peak_otm_new2.png');
+        marker-file: url('symbols/peak_otm.png');
         marker-fill: @landform-color;
       }
       [feature = 'volcano']{

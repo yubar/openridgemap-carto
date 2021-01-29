@@ -1,26 +1,26 @@
 @ridge-width-4: 1;
 @ridge-width-3: 2;
-@ridge-width-2: 4;
-@ridge-width-1: 6;
+@ridge-width-2: 3;
+@ridge-width-1: 4;
 
-@text-size-4: 16;
-@text-size-3: 18;
-@text-size-2: 20;
-@text-size-1: 22;
+@text-size-4: 12;
+@text-size-3: 14;
+@text-size-2: 16;
+@text-size-1: 18;
 
-@text-dy-4: 6;
-@text-dy-3: 8;
-@text-dy-2: 12;
-@text-dy-1: 16;
+@text-dy-4: 4;
+@text-dy-3: 6;
+@text-dy-2: 9;
+@text-dy-1: 12;
 
-#ridges[zoom >= 11][feature = 'ridge']{
+#ridges[zoom >= 10][feature = 'ridge']{
     line-color: @landform-color;
     line-join: round;
     line-cap: round;
     line-width: 0;
     
-    [zoom = 11]{
-        [len >= 5]{ line-width: @ridge-width-4; }
+    [zoom >= 10]{
+        [len >= 2]{ line-width: @ridge-width-4; }
         [len >= 10]{ line-width: @ridge-width-3; }
         [len >= 30]{ line-width: @ridge-width-2; }
         [len >= 50]{ line-width: @ridge-width-1; }
@@ -71,23 +71,21 @@
     }
     [zoom = 10]{
         text-spacing: 5000;
+        text-dy: @text-dy-4;
         [len >= 010]{ 
             text-size: @text-size-4; 
-            text-dy: @text-dy-4; 
-            line-width: @ridge-width-4;
-            line-color: @landform-color;
+             
+
         }
         [len >= 050]{ 
             text-size: @text-size-3; 
             text-dy: @text-dy-3; 
-            line-width: @ridge-width-3;
-            line-color: @landform-color;
+
         }
         [len >= 100]{ 
             text-size: @text-size-2; 
             text-dy: @text-dy-2; 
-            line-width: @ridge-width-2;
-            line-color: @landform-color;
+
         }
     }
     [zoom = 11]{
