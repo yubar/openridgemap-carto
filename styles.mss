@@ -1,5 +1,5 @@
 @standard-halo-radius: 1;
-@standard-halo-fill: rgba(255,255,255,0.7);
+@standard-halo-fill: rgba(192,192,192,0.5);
 
 @land-color: #f4f0ec;
 @landform-color: #5c2800;
@@ -8,7 +8,7 @@
 @boundary-color: fadeout(@boundary-color-lz, 80%);
 
 
-@water-color: #95cfe8;
+@water-color: #4898c4;
 @waterway-color: #004080;
 @water-border-color: @waterway-color;
 @water-text: @water-border-color;
@@ -24,8 +24,8 @@
 @water-text-lz: darken(@waterway-lz, 20%);
 
 @waterway-text-repeat-distance: 100;
-@water-halo-radius: 1;
-@water-halo-fill: rgba(255,255,255,0.7);
+@water-halo-radius: @standard-halo-radius/2;
+@water-halo-fill: @standard-halo-fill;
 
 @glacier: rgba(0,187,255,0.1);
 @glacier-lowzoom: rgba(0,187,255,0.2);
@@ -38,6 +38,7 @@
 @wide-wrap-width: 45;
 @standard-line-spacing-size: -1.5;
 
+@ridge-halo-radius: @standard-halo-radius;
 
 Map {
 	buffer-size: 256;

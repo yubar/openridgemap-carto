@@ -43,8 +43,8 @@
 		text-size: 10;
 		text-face-name: @oblique-fonts;
 		text-fill: @water-text-lz;
-		text-halo-radius: 1.5;
-		text-halo-fill: rgba(255,255,255,0.5);
+		text-halo-radius: @water-halo-radius;
+		text-halo-fill: @water-halo-fill;
 		text-spacing: 250;
 		text-placement: line;
 		text-repeat-distance: 150;

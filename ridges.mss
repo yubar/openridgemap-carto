@@ -45,7 +45,7 @@
     text-size: 0;
     text-face-name: @oblique-fonts;
     text-fill: #000;
-    text-halo-radius: 1;
+    text-halo-radius: @ridge-halo-radius;
     text-halo-fill: @standard-halo-fill;
     text-spacing: 500;
     text-character-spacing: 10;
