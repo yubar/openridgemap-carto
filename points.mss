@@ -116,7 +116,7 @@
     }
 
     [zoom = 11]{
-      marker-transform: scale(1.4), rotate([angle]);
+      marker-transform: scale(1.6), rotate([angle]);
     }
 
     [zoom = 14]{

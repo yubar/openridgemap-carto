@@ -1,5 +1,5 @@
-@standard-halo-radius: 2;
-@standard-halo-fill: rgba(192,192,192,0.5);
+@standard-halo-radius: 1.5;
+@standard-halo-fill: rgba(255,255,255,0.7);
 
 @land-color: #f4f0ec;
 @landform-color: #5c2800;
@@ -24,7 +24,7 @@
 @water-text-lz: darken(@waterway-lz, 20%);
 
 @waterway-text-repeat-distance: 100;
-@water-halo-radius: @standard-halo-radius/2;
+@water-halo-radius: @standard-halo-radius;
 @water-halo-fill: @standard-halo-fill;
 
 @glacier: rgba(0,187,255,0.1);

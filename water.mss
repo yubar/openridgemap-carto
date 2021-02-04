@@ -1,5 +1,5 @@
-@waterway-width-4: 1;
-@waterway-width-3: 1.5;
+@waterway-width-4: 1.5;
+@waterway-width-3: 2;
 @waterway-width-2: 2.5;
 @waterway-width-1: 3;
 
@@ -126,7 +126,7 @@
   	[intermittent != 1][zoom >= 11] {
 
 	  	line-color: @water-border-color;
-  		[zoom <= 12] {line-width: 1;}
+  		[zoom <= 12] {line-width: 1.5;}
   		[zoom >= 13] {line-width: 2;}
 		[zoom >= 15] {line-width: 5;}
 
@@ -206,7 +206,7 @@
   	,[feature = 'canal']{
 		[zoom >= 8]{
 			text-name: "[name]";
-			text-size: 12;
+			text-size: 16;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -214,12 +214,12 @@
 			text-spacing: 250;
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 5;
+			text-dy: 4;
 			[zoom = 10] { text-fill: @water-text-mz; }
 			[zoom = 8][len >=50],
 			[zoom = 9][len >=30],
 			[zoom >= 10]{ 
-				text-size: 16; 
+				text-size: 18; 
 			}
 			[zoom >= 12] { text-size: 18; }
 			[zoom >= 14] { text-size: 20; }
@@ -233,7 +233,7 @@
 		[intermittent != 1][zoom >= 11]{
 
 			text-name: "[name]";
-			text-size: 14;
+			text-size: 16;
 			text-face-name: @oblique-fonts;
 			text-fill: @water-text;
 			text-halo-radius: @water-halo-radius;
@@ -241,7 +241,7 @@
 			text-spacing: 250;
 			text-placement: line;
 			text-repeat-distance: @waterway-text-repeat-distance;
-			text-dy: 1;
+			text-dy: 2;
 			[zoom >= 12] { text-size: 16; }
 			[zoom >= 14] { text-size: 18; }
 

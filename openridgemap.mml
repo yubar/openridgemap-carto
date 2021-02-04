@@ -81,7 +81,7 @@ Layer:
       table: |-
         (SELECT
           feature
-          ,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 150), 4, true) geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,GREATEST (R.len, JM.len, L.len) AS len
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
@@ -119,6 +119,7 @@ Layer:
           public.osm_water_poly
         WHERE
           area > 1*!pixel_width!::real*!pixel_height!::real
+          AND feature <> 'riverbank'
         ) AS waterareas
     #properties:
     #  minzoom: 4  
@@ -165,7 +166,7 @@ Layer:
         (SELECT 
           'ridge' AS feature
           ,COALESCE(NULLIF(R.name_ru,''), R."name", NULLIF(L.name_ru,''), L."name") "name"
-          ,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 150), 4, true) geometry
           ,COALESCE(R.len, L.len) AS len
         FROM
           public.osm_relief_line L
@@ -289,7 +290,8 @@ Layer:
       table: |-
         (SELECT
           feature
-          ,L.geometry
+          --,L.geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 100), 4, true) geometry
           ,CASE WHEN seasonal <>'' OR intermittent = 'yes' THEN 1 ELSE NULL END intermittent
           ,GREATEST (R.len, JM.len, L.len) AS len
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L."name", ''), NULLIF(R.name_ru,''), NULLIF(R."name", ''), JM."name") "name"
@@ -320,7 +322,7 @@ Layer:
         (SELECT
           'ridge' AS feature
           ,COALESCE(NULLIF(L.name_ru,''), NULLIF(L.name,''), NULLIF(R.name_ru,''), NULLIF(R.name,'')) "name"
-          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 500), 4, true) geometry
+          ,ST_ChaikinSmoothing(ST_Simplify(L.geometry, 1000), 4, true) geometry
           ,COALESCE(R.len, L.len) AS len
         FROM 
           public.osm_relief_line L
