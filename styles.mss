@@ -1,15 +1,15 @@
 @standard-halo-radius: 2;
-@standard-halo-fill: rgba(255,255,255,0.5);
+@standard-halo-fill: rgba(192,192,192,0.5);
 
 @land-color: #f4f0ec;
-@landform-color: #9c4400;
+@landform-color: #5c2800;
 @boundary-color-lz: #c700e6;
 @boundary-color-mz: fadeout(@boundary-color-lz, 50%);
 @boundary-color: fadeout(@boundary-color-lz, 80%);
 
 
-@water-color: #5ec6ff;
-@waterway-color: #0060bf;
+@water-color: #4898c4;
+@waterway-color: #004080;
 @water-border-color: @waterway-color;
 @water-text: @water-border-color;
 

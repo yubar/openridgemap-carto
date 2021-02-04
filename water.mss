@@ -191,7 +191,7 @@
 		text-name: "[name]";
 		text-size: 14;
 		text-fill: @water-text;
-		[zoom <=10]{ text-fill: @water-text-mz; }
+		[zoom <=11]{ text-fill: @water-text-mz; }
 		text-face-name: @oblique-fonts;
 		text-halo-radius: @water-halo-radius;
 		text-halo-fill: @water-halo-fill;
