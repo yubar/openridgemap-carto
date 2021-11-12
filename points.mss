@@ -133,7 +133,7 @@
       marker-clip: false;
 
       [feature = 'peak']{
-        marker-file: url('symbols/peak_otm.png');
+        marker-file: url('symbols/peak_drk.png');
         marker-fill: @landform-color;
       }
       [feature = 'volcano']{
