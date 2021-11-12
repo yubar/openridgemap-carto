@@ -370,7 +370,7 @@ Layer:
             feature
             ,geometry
             ,angle
-            ,scale
+            ,REPLACE(scale, 'A', 'А') scale
             ,elevation
           FROM 
            (
