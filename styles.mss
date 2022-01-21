@@ -1,8 +1,9 @@
 @standard-halo-radius: 1;
-@standard-halo-fill: rgba(255,255,255,0.7);
+@standard-halo-fill: rgba(4,4,8,0.7);
 
 @land-color: #f4f0ec;
-@landform-color: #5c2800;
+@landform-color: #402010;
+@landform-text: #c8bcaa;
 @boundary-color-lz: #c700e6;
 @boundary-color-mz: fadeout(@boundary-color-lz, 50%);
 @boundary-color: fadeout(@boundary-color-lz, 80%);

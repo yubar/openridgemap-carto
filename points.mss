@@ -1,4 +1,3 @@
-@landform-text: #401a10;
 @amenity-color: #b00090;
 @city-halo-fill: #111;
 
@@ -157,7 +156,7 @@
         text-dy: 3;
         
         text-face-name: @oblique-fonts;
-        text-halo-radius: 1.5;
+        text-halo-radius: 1;
         text-halo-fill: @standard-halo-fill;
         text-placement: interior;
       }
@@ -173,8 +172,8 @@
           text-allow-overlap: "false";
           text-face-name: @standard-font;
           text-fill: @landform-text;
-          text-halo-fill: rgba(255, 255, 255, 0.8);
-          text-halo-radius: 1.5;
+          text-halo-fill: @standard-halo-fill;
+          text-halo-radius: 1;
 
           text-dx: 8;
           text-dy: 8;

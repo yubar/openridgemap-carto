@@ -50,9 +50,9 @@
         text-name: "[name]";
         text-size: 0;
         text-face-name: @oblique-fonts;
-    text-fill: #fcf1c8; 
+        text-fill: @landform-text; 
         text-halo-radius: 1;
-    text-halo-fill: #111;/*@standard-halo-fill;*/
+        text-halo-fill: @standard-halo-fill;
         text-spacing: 500;
         text-character-spacing: 10;
         text-placement: line;
